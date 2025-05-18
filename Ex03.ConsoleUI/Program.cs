@@ -4,6 +4,7 @@ class Program
 {
     public static void Main()
     {
-        Console.WriteLine("Hello World!");
+        UserInterface userInterface = new UserInterface();
+        userInterface.PresentUserOptions();
     }
 }
