@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Ex03.ConsoleUI/1.0.0": {
+        "dependencies": {
+          "Ex03.GarageLogic": "1.0.0"
+        },
+        "runtime": {
+          "Ex03.ConsoleUI.dll": {}
+        }
+      },
+      "Ex03.GarageLogic/1.0.0": {
+        "runtime": {
+          "Ex03.GarageLogic.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Ex03.ConsoleUI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Ex03.GarageLogic/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "Ex03.GarageLogic/1.0.0": {
+        "runtime": {
+          "Ex03.GarageLogic.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Ex03.GarageLogic/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
