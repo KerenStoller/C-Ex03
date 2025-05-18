@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/kerenstoller/Documents/School/C#/Ex03/B25 Ex03 JonathanSheffer 302345749 KerenStoller 212127898/Ex03.GarageLogic/Ex03.GarageLogic.csproj": {}
+    "/Users/jonathansheffer/Desktop/College/C# and .NET/Ex03/Ex03.GarageLogic/Ex03.GarageLogic.csproj": {}
   },
   "projects": {
-    "/Users/kerenstoller/Documents/School/C#/Ex03/B25 Ex03 JonathanSheffer 302345749 KerenStoller 212127898/Ex03.GarageLogic/Ex03.GarageLogic.csproj": {
+    "/Users/jonathansheffer/Desktop/College/C# and .NET/Ex03/Ex03.GarageLogic/Ex03.GarageLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/kerenstoller/Documents/School/C#/Ex03/B25 Ex03 JonathanSheffer 302345749 KerenStoller 212127898/Ex03.GarageLogic/Ex03.GarageLogic.csproj",
+        "projectUniqueName": "/Users/jonathansheffer/Desktop/College/C# and .NET/Ex03/Ex03.GarageLogic/Ex03.GarageLogic.csproj",
         "projectName": "Ex03.GarageLogic",
-        "projectPath": "/Users/kerenstoller/Documents/School/C#/Ex03/B25 Ex03 JonathanSheffer 302345749 KerenStoller 212127898/Ex03.GarageLogic/Ex03.GarageLogic.csproj",
-        "packagesPath": "/Users/kerenstoller/.nuget/packages/",
-        "outputPath": "/Users/kerenstoller/Documents/School/C#/Ex03/B25 Ex03 JonathanSheffer 302345749 KerenStoller 212127898/Ex03.GarageLogic/obj/",
+        "projectPath": "/Users/jonathansheffer/Desktop/College/C# and .NET/Ex03/Ex03.GarageLogic/Ex03.GarageLogic.csproj",
+        "packagesPath": "/Users/jonathansheffer/.nuget/packages/",
+        "outputPath": "/Users/jonathansheffer/Desktop/College/C# and .NET/Ex03/Ex03.GarageLogic/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/kerenstoller/.nuget/NuGet/NuGet.Config"
+          "/Users/jonathansheffer/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -59,7 +59,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/Users/kerenstoller/.dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
