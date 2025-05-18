@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f57fa448-2d7c-4669-92f1-8595cfdf50ff" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/.idea.Ex03 Jonathan 302345749 Keren 212127898/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EnergySystem/Battery.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EnergySystem/FuelSystem.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vehicles/Car.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vehicles/Motorcycle.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vehicles/Tire.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vehicles/Truck.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vehicles/Vehicle.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Ex03.ConsoleUI/obj/Debug/net9.0/Ex03.ConsoleUI.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Ex03.ConsoleUI/obj/Debug/net9.0/Ex03.ConsoleUI.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Ex03.ConsoleUI/obj/Debug/net9.0/Ex03.ConsoleUI.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Ex03.ConsoleUI/obj/Debug/net9.0/Ex03.ConsoleUI.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Ex03.ConsoleUI/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/../Ex03.ConsoleUI/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net9.0/Ex03.GarageLogic.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net9.0/Ex03.GarageLogic.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/net9.0/Ex03.GarageLogic.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/net9.0/Ex03.GarageLogic.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/obj/rider.project.model.nuget.info" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "KerenStoller"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/KerenStoller/C-Ex03.git",
+    "accountId": "58534c79-8575-487e-b0c7-207823503c03"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 3
+}]]></component>
+  <component name="ProjectId" id="2xHCnCtvlIavPOj0mb68d9Uja9N" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Keren",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f57fa448-2d7c-4669-92f1-8595cfdf50ff" name="Changes" comment="" />
+      <created>1747585776160</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747585776160</updated>
+      <workItem from="1747585777488" duration="4000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
