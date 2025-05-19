@@ -4,11 +4,27 @@ public abstract class EnergySystem
 {
     protected float CurrentEnergyAmount { get; set; }
     protected readonly float m_MaxEnergyCapacity;
+    protected float EnergyPercentage { get; set; }
     
     public void RefillEnergy(float i_EnergyToAdd)
     {
         CurrentEnergyAmount = CurrentEnergyAmount + i_EnergyToAdd > m_MaxEnergyCapacity ?
             m_MaxEnergyCapacity : CurrentEnergyAmount + i_EnergyToAdd;
+    }
+
+    public void AddDetails(float i_EnergyPercentage, float i_CurrentEnergy)
+    {
+        if (i_CurrentEnergy <= m_MaxEnergyCapacity && i_CurrentEnergy > 0)
+        {
+            CurrentEnergyAmount = i_CurrentEnergy;
+            //TODO: calculate and throw if needed
+            EnergyPercentage = i_EnergyPercentage;
+        }
+        else
+        {
+            throw new ValueRangeException(m_MaxEnergyCapacity, 0);
+            //TODO: how to add message
+        }
     }
 
     public abstract bool IsElectric { get; }

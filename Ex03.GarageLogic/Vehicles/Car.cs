@@ -32,6 +32,19 @@ public abstract class Car : Vehicle
         details.Add(NumberOfDoors.ToString());
         return details;
     }
+
+    public override void AddSpecificDetails(string i_Color, string i_NumberOfDoors)
+    {
+        try
+        {
+            Color = (e_Color)Enum.Parse(typeof(e_Color), i_Color);
+            NumberOfDoors = (e_NumberOfDoors)Enum.Parse(typeof(e_NumberOfDoors), i_NumberOfDoors);
+        }
+        catch (FormatException e)
+        {
+            throw new FormatException(e.Message);
+        }
+    }
 }
 
 public class ElectricCar : Car

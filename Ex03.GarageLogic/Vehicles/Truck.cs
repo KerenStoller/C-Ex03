@@ -25,4 +25,17 @@ public class Truck : Vehicle
         details.Add(CargoVolume.ToString());
         return details;
     }
+    
+    public override void AddSpecificDetails(string i_ContainsDangerousMaterial, string i_CargoVolume)
+    {
+        try
+        {
+            ContainsDangerousMaterials = bool.Parse(i_ContainsDangerousMaterial);
+            CargoVolume = float.Parse(i_CargoVolume);
+        }
+        catch (FormatException e)
+        {
+            throw new FormatException(e.Message);
+        }
+    }
 }

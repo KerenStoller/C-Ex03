@@ -26,6 +26,19 @@ public abstract class Motorcycle : Vehicle
         details.Add(EngineCapacity.ToString());
         return details;
     }
+    
+    public override void AddSpecificDetails(string i_LicenseType, string i_EngineCapacity)
+    {
+        try
+        {
+            LicenseType = Enum.Parse<e_LicenseType>(i_LicenseType);
+            EngineCapacity = Convert.ToInt32(i_EngineCapacity);
+        }
+        catch (FormatException e)
+        {
+            throw new FormatException(e.Message);
+        }
+    }
 }
 
 public class ElectricMotorcycle : Motorcycle

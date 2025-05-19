@@ -25,30 +25,44 @@ public abstract class Vehicle
         r_ModelName = i_ModelName;
     }
 
+    public void AddGeneralDetails(float i_EnergyPercentage, float i_CurrentEnergy, 
+        string i_TireModelName, float i_currentAirPressure)
+    {
+        m_EnergySystem.AddDetails(i_EnergyPercentage, i_CurrentEnergy);
+        m_Tires.AddDetails(i_TireModelName, i_currentAirPressure);
+        //Throws ValueRangeException
+    }
+
+    public abstract void AddSpecificDetails(string i_Detail1, string i_Detail2);
+
+    private void validateElectric()
+    {
+        if (!IsElectric())
+        {
+            throw new ArgumentException("Vehicle isn't electric");
+        }
+    }
+    
+    private void validateNotElectric()
+    {
+        if (IsElectric())
+        {
+            throw new ArgumentException("Vehicle is electric");
+        }
+    }
+    
+    private void ValidateFuelType(EnergySystem.FuelSystem.e_FuelType i_FuelType)
+    {
+        validateNotElectric();
+        if (((FuelSystem)m_EnergySystem).getFuelType() != i_FuelType)
+        {
+            throw new ArgumentException("Fuel type is different");
+        }
+    }
+    
     public bool IsElectric()
     {
         return m_EnergySystem.IsElectric;
-    }
-
-    private bool IsRightFuel(EnergySystem.FuelSystem.e_FuelType i_FuelType)
-    {
-        bool returnValue = false;
-        if (!IsElectric())
-        {
-            if (((FuelSystem)m_EnergySystem).getFuelType() == i_FuelType)
-            {
-                returnValue = true;
-            }
-            else
-            {
-                //TODO: throw exception
-            }
-        }
-        else
-        {
-            //TODO: throw Exception;
-        }
-        return returnValue;
     }
 
     public int NumberOfTires()
@@ -63,26 +77,14 @@ public abstract class Vehicle
 
     public void FillTank(EnergySystem.FuelSystem.e_FuelType i_FuelType, float i_AmountOfFuelToAdd)
     {
-        if (IsRightFuel(i_FuelType))
-        {
-            m_EnergySystem.RefillEnergy(i_AmountOfFuelToAdd);
-        }
-        else
-        {
-            //TODO throw exception either electric or wrong fuel
-        }
+        ValidateFuelType(i_FuelType);
+        m_EnergySystem.RefillEnergy(i_AmountOfFuelToAdd);
     }
 
     public void ChargeBattery(float i_TimeToChargeInMinutes)
     {
-        if (IsElectric())
-        {
-            m_EnergySystem.RefillEnergy(i_TimeToChargeInMinutes);
-        }
-        else
-        {
-            //TODO: throw exc
-        }
+        validateElectric();
+        m_EnergySystem.RefillEnergy(i_TimeToChargeInMinutes);
     }
 
     public abstract List<string> GetDetails();

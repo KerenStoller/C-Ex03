@@ -7,9 +7,68 @@ public class GarageLogic
     
     public GarageLogic()
     {
-        m_GarageDB = new GarageDB(m_Vehicles);
+        m_GarageDB = new GarageDB();
+        m_Vehicles = new Dictionary<string, Vehicle>();
+        addVehiclesFromDb();
     }
 
+    public void AddVehicleFromDetails(List<string> i_DetailsAboutCar)
+    {
+        Vehicle vehicle;
+        string vehicleType = i_DetailsAboutCar[0];
+        string licenseID = i_DetailsAboutCar[1];
+
+        validateVehicleNotInGarage(licenseID);
+        if (!VehicleCreator.SupportedTypes.Contains(vehicleType))
+        {
+            throw new ArgumentException($"{vehicleType} is not supported");
+        }
+        
+        string modelName = i_DetailsAboutCar[2];
+        vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseID, modelName);
+        string tireModel = i_DetailsAboutCar[4];
+        float energyPercentage, currentAirPressure, currentEnergyAmount;
+            
+        try
+        {
+            energyPercentage = float.Parse(i_DetailsAboutCar[3]);
+            currentAirPressure = float.Parse(i_DetailsAboutCar[5]);
+            currentEnergyAmount = float.Parse(i_DetailsAboutCar[6]);
+        }
+        catch (FormatException e)
+        {
+            throw new FormatException($"Invalid number format in vehicle details: {e.Message}", e);
+        }
+        
+        vehicle.AddGeneralDetails(energyPercentage, currentEnergyAmount, tireModel, currentAirPressure);
+        vehicle.AddSpecificDetails(i_DetailsAboutCar[7], i_DetailsAboutCar[8]);
+        AddVehicle(vehicle);
+    }
+    
+    private void addVehiclesFromDb()
+    {
+        foreach (List<string> lineFromFile in m_GarageDB.m_dbVehicles)
+        {
+            AddVehicleFromDetails(lineFromFile);
+        }
+    }
+
+    private void validateVehicleInGarage(string i_LicenseID)
+    {
+        if (!IsVehicleInGarage(i_LicenseID))
+        {
+            throw new ArgumentException("Vehicle is not in garage");
+        }
+    }
+    
+    private void validateVehicleNotInGarage(string i_LicenseID)
+    {
+        if (IsVehicleInGarage(i_LicenseID))
+        {
+            throw new ArgumentException("Vehicle is already in the garage");
+        }
+    }
+    
     public bool IsVehicleInGarage(string i_LicenseID)
     {
         return m_Vehicles.ContainsKey(i_LicenseID);
@@ -17,27 +76,15 @@ public class GarageLogic
 
     public void WorkOnVehicle(string i_LicenseID)
     {
-        if (IsVehicleInGarage(i_LicenseID))
-        {
-            Vehicle vehicle = m_Vehicles[i_LicenseID];
-            vehicle.VehicleState = Vehicle.e_VehicleState.InRepair;
-        }
-        else
-        {
-            //TODO: throw exc
-        }
+        validateVehicleInGarage(i_LicenseID);
+        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        vehicle.VehicleState = Vehicle.e_VehicleState.InRepair;
     }
     
-    public void AddVehicle(Vehicle vehicle)
+    private void AddVehicle(Vehicle vehicle)
     {
-        if (!IsVehicleInGarage(vehicle.r_LicenseID))
-        {
-            m_Vehicles.Add(vehicle.r_LicenseID, vehicle);
-        }
-        else
-        {
-            //TODOL: throw exc
-        }
+        validateVehicleNotInGarage(vehicle.r_LicenseID);
+        m_Vehicles.Add(vehicle.r_LicenseID, vehicle);
     }
 
     public List<string> GetLicenseIDOfAllVehiclesInGarage(Vehicle.e_VehicleState? i_FilterByState = null)
@@ -66,82 +113,37 @@ public class GarageLogic
 
     public void ChangeVehicleState(string i_LicenseID, Vehicle.e_VehicleState i_NewState)
     {
-        if (IsVehicleInGarage(i_LicenseID))
-        {
-            m_Vehicles[i_LicenseID].VehicleState = i_NewState;
-        }
-        else
-        {
-            //TODO: throw exception
-        }
+        validateVehicleInGarage(i_LicenseID);
+        m_Vehicles[i_LicenseID].VehicleState = i_NewState;
     }
 
     public void InflateTires(string i_LicenseID)
     {
-        if (IsVehicleInGarage(i_LicenseID))
-        {
-            m_Vehicles[i_LicenseID].InflateTires();
-        }
-        else
-        {
-            //TODO: throw excpetion
-        }
+        validateVehicleInGarage(i_LicenseID);
+        m_Vehicles[i_LicenseID].InflateTires();
     }
 
     public void FillTank(string i_LicenseID, EnergySystem.FuelSystem.e_FuelType i_FuelType, float i_AmountOfFuelToAdd)
     {
-        if (IsVehicleInGarage(i_LicenseID))
-        {
-            Vehicle vehicle = m_Vehicles[i_LicenseID];
-            try
-            {
-                vehicle.FillTank(i_FuelType, i_AmountOfFuelToAdd);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                //TODO :throw;
-            }
-        }
-        else
-        {
-            //TODO: throw exception
-        }
+        validateVehicleInGarage(i_LicenseID);
+        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        vehicle.FillTank(i_FuelType, i_AmountOfFuelToAdd);
     }
 
     public void ChargeBattery(string i_LicenseID, float i_TimeToChargeInMinutes)
     {
-        if (IsVehicleInGarage(i_LicenseID))
-        {
-            Vehicle vehicle = m_Vehicles[i_LicenseID];
-            try
-            {
-                vehicle.ChargeBattery(i_TimeToChargeInMinutes);
-            }
-            catch (Exception e)
-            {
-                //TODO: throw exc
-            }
-        }
-        else
-        {
-            //TODO: throw exception
-        }
+        validateVehicleInGarage(i_LicenseID);
+        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        vehicle.ChargeBattery(i_TimeToChargeInMinutes);
     }
 
     public List<string> GetDetails(string i_LicenseID)
     {
         List<string> listToReturn = new List<string>();
-
-        if (IsVehicleInGarage(i_LicenseID))
-        {
-            Vehicle vehicle = m_Vehicles[i_LicenseID];
-            listToReturn =  vehicle.GetDetails();
-        }
-        else
-        {
-            //TODO: throw exc
-        }
+        
+        validateVehicleInGarage(i_LicenseID);
+        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        listToReturn =  vehicle.GetDetails();
 
         return listToReturn;
     }
