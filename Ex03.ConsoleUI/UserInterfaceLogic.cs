@@ -19,6 +19,7 @@ public class UserInterfaceLogic
                 Console.Clear();
                 Console.WriteLine("Invalid input. Please try again.");
                 Console.WriteLine("Please select an option:");
+                //TODO: the options are given in vehicleCreator
                 Console.WriteLine(UserInterface.menuOptions);
                 option = Console.ReadLine();
             }

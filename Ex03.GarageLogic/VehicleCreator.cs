@@ -4,26 +4,26 @@ namespace Ex03.GarageLogic
 {
     public abstract class VehicleCreator
     {
-        public static Vehicle CreateVehicle(string i_VehicleType)
+        public static Vehicle CreateVehicle(string i_VehicleType, string i_LicenseID, string i_ModelName)
         {
             Vehicle newVehicle = null;
 
             switch(i_VehicleType)
             {
                 case "FuelCar":
-                    newVehicle = new FuelCar();
+                    newVehicle = new FuelCar(i_LicenseID, i_ModelName);
                     break;
                 case "ElectricCar":
-                    newVehicle = new ElectricCar();
+                    newVehicle = new ElectricCar(i_LicenseID, i_ModelName);
                     break;
                 case "FuelMotorcycle":
-                    newVehicle = new FuelMotorcycle();
+                    newVehicle = new FuelMotorcycle(i_LicenseID, i_ModelName);
                     break;
                 case "ElectricMotorcycle":
-                    newVehicle = new ElectricMotorcycle();
+                    newVehicle = new ElectricMotorcycle(i_LicenseID, i_ModelName);
                     break;
                 case "Truck":
-                    newVehicle = new Truck();
+                    newVehicle = new Truck(i_LicenseID, i_ModelName);
                     break;
             }
 
