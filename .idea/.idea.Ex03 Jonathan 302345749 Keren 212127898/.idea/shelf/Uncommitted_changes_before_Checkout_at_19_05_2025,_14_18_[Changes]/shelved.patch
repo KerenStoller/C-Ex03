@@ -1,0 +1,19 @@
+Index: Ex03.ConsoleUI/Program.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>namespace Ex03.ConsoleUI;\n\nclass Program\n{\n    public static void Main()\n    {\n     \n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Ex03.ConsoleUI/Program.cs b/Ex03.ConsoleUI/Program.cs
+--- a/Ex03.ConsoleUI/Program.cs	(revision 62ffa183dcf81383ec8057da672e55972b30274a)
++++ b/Ex03.ConsoleUI/Program.cs	(date 1747587360334)
+@@ -4,6 +4,6 @@
+ {
+     public static void Main()
+     {
+-     
++        
+     }
+ }
+\ No newline at end of file

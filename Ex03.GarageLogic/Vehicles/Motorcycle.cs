@@ -11,14 +11,25 @@ public abstract class Motorcycle : Vehicle
     
     private e_LicenseType m_LicenseType;
     private int m_EngineCapacity;
+
+    protected Motorcycle()
+    {
+        NumberOfTires = 2;
+    }
 }
 
 public class ElectricMotorcycle : Motorcycle
 {
-    private Battery m_Battery;
+    public ElectricMotorcycle()
+    {
+        m_EnergySystem = new Battery();
+    }
 }
 
 public class FuelMotorcycle : Motorcycle
 {
-    private FuelSystem m_FuelSystem;
+    public FuelMotorcycle()
+    {
+        m_EnergySystem = new FuelSystem();
+    }
 }

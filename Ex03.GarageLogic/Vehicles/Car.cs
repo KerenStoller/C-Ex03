@@ -16,14 +16,25 @@ public abstract class Car : Vehicle
     
     private e_Color m_Color;
     private e_NumberOfDoors m_NumberOfDoors;
+
+    protected Car()
+    {
+        NumberOfTires = 5;
+    }
 }
 
 public class ElectricCar : Car
 {
-    private Battery m_Battery;
+    public ElectricCar()
+    {
+        m_EnergySystem = new Battery();
+    }
 }
 
 public class FuelCar : Car
 {
-    private FuelSystem m_FuelSystem;
+    public FuelCar()
+    {
+        m_EnergySystem = new FuelSystem();
+    }
 }

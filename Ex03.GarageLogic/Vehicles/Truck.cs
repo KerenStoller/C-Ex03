@@ -6,5 +6,10 @@ public class Truck : Vehicle
 {
     private bool m_ContainsDangerousMaterials;
     private float m_CargoVolume;
-    private FuelSystem m_FuelSystem;
+
+    public Truck()
+    {
+        NumberOfTires = 12;
+        m_EnergySystem = new FuelSystem();
+    }
 }

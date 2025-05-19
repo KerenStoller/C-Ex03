@@ -29,7 +29,7 @@ public class UserInterfaceLogic
     {
         // TODO: check the input
         
-        Vehicle createdVehicle = VehicleCreator.CreateVehicle(option);
+        Vehicle createdVehicle = VehicleCreator.CreateVehicle(VehicleModelName);
         if (createdVehicle.IsElectric())
         {
             Console.WriteLine("Please enter the state of the battery");
@@ -82,7 +82,7 @@ public class UserInterfaceLogic
         }
         else
         {
-            for (int i = 0; i < vehicle.NumberOfWheels; i++)
+            for (int i = 0; i < vehicle.NumberOfTires; i++)
             {
                 Console.WriteLine($"What is the state of the wheel {i + 1} of the vehicle?");
                 // TODO: do something with the wheel
