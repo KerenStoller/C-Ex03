@@ -14,6 +14,7 @@ public class GarageDB
     
     public static List<List<string>> ReadLinesFromFile()
     {
+        //TODO: use readalllines
         List<List<string>> lines = new List<List<string>>();
 
         if (File.Exists(k_FileName))
