@@ -33,6 +33,7 @@ public class UserInterfaceLogic
         if (createdVehicle.IsElectric())
         {
             Console.WriteLine("Please enter the state of the battery");
+            
         }
         else
         {
@@ -43,26 +44,39 @@ public class UserInterfaceLogic
         bool allWheelsAtOnce = false;
         Console.WriteLine("Do you want to set the state of the wheels at once? press y if yes?");
         string input = Console.ReadLine().ToLower();
+        
         // TODO: check for valid input
         if (input == "y")
         {
             allWheelsAtOnce = true;
         }
+        
         handleStateOfWheels(allWheelsAtOnce, createdVehicle);
+        
         if (createdVehicle is Car)
         {
-            Console.WriteLine("please chose a color from the following list: "); // TODO: add the options for colors
+            Console.WriteLine("please chose a color from the following list: ");
+            foreach (Car.e_Color carColor in Enum.GetValues(typeof(Car.e_Color)))
+            {
+                Console.WriteLine(carColor);
+            }
+            //TODO: get color
         }
 
         if (createdVehicle is Truck)
         {
             // TODO: if contains dangerous materials put it
-            Console.WriteLine("Is the truck contains dangerous Materials? press y if yes");
+            Console.WriteLine("Does the truck contain dangerous Materials? press y if yes");
         }
 
         if (createdVehicle is Motorcycle)
         {
-            // TODO: check the type of license
+            Console.WriteLine("please chose a license from the following list: "); // TODO: add the options for colors
+            foreach (Motorcycle.e_LicenseType licenseType in Enum.GetValues(typeof(Motorcycle.e_LicenseType)))
+            {
+                Console.WriteLine(licenseType);
+            }
+            // TODO: get license
         }
     }
 
@@ -82,7 +96,7 @@ public class UserInterfaceLogic
         }
         else
         {
-            for (int i = 0; i < vehicle.NumberOfTires; i++)
+            for (int i = 0; i < vehicle.NumberOfTires(); i++)
             {
                 Console.WriteLine($"What is the state of the wheel {i + 1} of the vehicle?");
                 // TODO: do something with the wheel

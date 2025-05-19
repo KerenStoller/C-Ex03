@@ -4,12 +4,12 @@ namespace Ex03.GarageLogic;
 
 public class Truck : Vehicle
 {
-    private bool m_ContainsDangerousMaterials;
-    private float m_CargoVolume;
+    private bool ContainsDangerousMaterials { get; set; }
+    private float CargoVolume { get; set; }
 
     public Truck()
     {
-        NumberOfTires = 12;
-        m_EnergySystem = new FuelSystem();
+        m_EnergySystem = new FuelSystem(EnergySystem.FuelSystem.e_FuelType.Soler, 135);
+        m_Tires = new Tires(12, "ModelName", 27);
     }
 }
