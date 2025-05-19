@@ -1,5 +1,4 @@
 namespace Ex03.GarageLogic;
-using Ex03.GarageLogic.EnergySystem;
 
 public abstract class Vehicle
 {
