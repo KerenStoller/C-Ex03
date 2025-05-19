@@ -10,15 +10,34 @@ public class GarageLogic
         m_GarageDB = new GarageDB(m_Vehicles);
     }
 
-    public void AddVehicle(Vehicle vehicle)
-    {
-        //TODO: do i need to check if valid?
-        m_Vehicles.Add(vehicle.r_LicenseID, vehicle);
-    }
-
-    public bool IsCarInGarage(string i_LicenseID)
+    public bool IsVehicleInGarage(string i_LicenseID)
     {
         return m_Vehicles.ContainsKey(i_LicenseID);
+    }
+
+    public void WorkOnVehicle(string i_LicenseID)
+    {
+        if (IsVehicleInGarage(i_LicenseID))
+        {
+            Vehicle vehicle = m_Vehicles[i_LicenseID];
+            vehicle.VehicleState = Vehicle.e_VehicleState.InRepair;
+        }
+        else
+        {
+            //TODO: throw exc
+        }
+    }
+    
+    public void AddVehicle(Vehicle vehicle)
+    {
+        if (!IsVehicleInGarage(vehicle.r_LicenseID))
+        {
+            m_Vehicles.Add(vehicle.r_LicenseID, vehicle);
+        }
+        else
+        {
+            //TODOL: throw exc
+        }
     }
 
     public List<string> GetLicenseIDOfAllVehiclesInGarage(Vehicle.e_VehicleState? i_FilterByState = null)
@@ -47,7 +66,7 @@ public class GarageLogic
 
     public void ChangeVehicleState(string i_LicenseID, Vehicle.e_VehicleState i_NewState)
     {
-        if (IsCarInGarage(i_LicenseID))
+        if (IsVehicleInGarage(i_LicenseID))
         {
             m_Vehicles[i_LicenseID].VehicleState = i_NewState;
         }
@@ -59,7 +78,7 @@ public class GarageLogic
 
     public void InflateTires(string i_LicenseID)
     {
-        if (IsCarInGarage(i_LicenseID))
+        if (IsVehicleInGarage(i_LicenseID))
         {
             m_Vehicles[i_LicenseID].InflateTires();
         }
@@ -71,7 +90,7 @@ public class GarageLogic
 
     public void FillTank(string i_LicenseID, EnergySystem.FuelSystem.e_FuelType i_FuelType, float i_AmountOfFuelToAdd)
     {
-        if (IsCarInGarage(i_LicenseID))
+        if (IsVehicleInGarage(i_LicenseID))
         {
             Vehicle vehicle = m_Vehicles[i_LicenseID];
             try
@@ -92,7 +111,7 @@ public class GarageLogic
 
     public void ChargeBattery(string i_LicenseID, float i_TimeToChargeInMinutes)
     {
-        if (IsCarInGarage(i_LicenseID))
+        if (IsVehicleInGarage(i_LicenseID))
         {
             Vehicle vehicle = m_Vehicles[i_LicenseID];
             try
@@ -114,9 +133,10 @@ public class GarageLogic
     {
         List<string> listToReturn = new List<string>();
 
-        if (IsCarInGarage(i_LicenseID))
+        if (IsVehicleInGarage(i_LicenseID))
         {
-            
+            Vehicle vehicle = m_Vehicles[i_LicenseID];
+            listToReturn =  vehicle.GetDetails();
         }
         else
         {

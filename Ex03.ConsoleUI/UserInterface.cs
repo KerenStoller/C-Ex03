@@ -1,6 +1,6 @@
-using Ex03.GarageLogic;
-
 namespace Ex03.ConsoleUI;
+
+using Ex03.GarageLogic;
 
 public class UserInterface
 {
