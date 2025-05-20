@@ -14,12 +14,13 @@ public class GarageLogic
 
     public void initialVehicleCreation(List<string> i_initialDetails)
     {
-        
+        // TODO
     }
     
     public void AddVehicleFromDetails(List<string> i_DetailsAboutCar)
     {
-        //TODO: make sure the i_DetailsAboutCar is long enoguh
+        //TODO: make sure the i_DetailsAboutCar is long enoguh 
+        //TDOD: need to add owner name and phone number
         Vehicle vehicle;
         string vehicleType = i_DetailsAboutCar[0];
         string licenseId = i_DetailsAboutCar[1];
