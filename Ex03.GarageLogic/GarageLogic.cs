@@ -12,6 +12,11 @@ public class GarageLogic
         //addVehiclesFromDb(); should be called from the user interface
     }
 
+    public void initialVehicleCreation(List<string> i_initialDetails)
+    {
+        
+    }
+    
     public void AddVehicleFromDetails(List<string> i_DetailsAboutCar)
     {
         //TODO: make sure the i_DetailsAboutCar is long enoguh
@@ -144,4 +149,39 @@ public class GarageLogic
         Vehicle vehicle = m_Vehicles[i_LicenseId];
         return vehicle.GetDetails();
     }
+    
+    public bool isCar(string i_LicenseId)
+    {
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
+        return vehicle is Car;
+    }
+    
+    public bool isTruck(string i_LicenseId)
+    {
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
+        return vehicle is Truck;
+    }
+    
+    public bool isMotorcycle(string i_LicenseId)
+    {
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
+        return vehicle is Motorcycle;
+    }
+    public bool isElectric(string i_LicenseId)
+    {
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
+        return vehicle.IsElectric();
+    }
+    
+    public int getNumberOfTires(string i_LicenseId)
+    {
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
+        return vehicle.NumberOfTires();
+    }
+    
 }

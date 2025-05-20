@@ -101,4 +101,15 @@ public abstract class Vehicle
         details.AddRange(m_EnergySystem.GetDetails());
         return details;
     }
+    
+    public void SetOwnerDetails(string i_OwnerName, string i_OwnerPhoneNumber)
+    {
+        m_OwnerName = i_OwnerName;
+        m_OwnerPhoneNumber = i_OwnerPhoneNumber;
+    }
+    
+    public void SetPressureOfSingleTire(int i_Index, float i_AirPressure)
+    {
+        m_Tires.SetPressureOfSingleTire(i_Index, i_AirPressure);
+    }
 }

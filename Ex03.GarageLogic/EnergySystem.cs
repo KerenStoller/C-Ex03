@@ -29,7 +29,7 @@ public abstract class EnergySystem
             //TODO: how to add message
         }
     }
-
+    
     public EnergySystem(float i_MaxEnergyCapacity)
     {
         r_MMaxEnergyCapacity = i_MaxEnergyCapacity;

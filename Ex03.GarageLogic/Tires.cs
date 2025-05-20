@@ -105,4 +105,18 @@ public class Tires
         
         return details;
     }
+    
+    public void SetPressureOfSingleTire(int i_TireIndex, float i_PressurePercentage)
+    {
+        if(i_TireIndex < 0 || i_TireIndex >= m_Tires.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(i_TireIndex));
+        }
+        if(i_PressurePercentage < 0f || i_PressurePercentage > 100f)
+        {
+            throw new ArgumentOutOfRangeException(nameof(i_PressurePercentage));
+        }
+        float newPressure = (i_PressurePercentage / 100f) * r_MaxAirPressure;
+        m_Tires[i_TireIndex].SetCurrentAirPressure(newPressure);
+    }
 }

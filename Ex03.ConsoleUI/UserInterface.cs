@@ -58,6 +58,17 @@ public class UserInterface
         }
     }
 
+    
+    // Vehicle type (string)
+    // License ID (string)
+    // Model name (string)
+    // Energy percentage (string, float-parsable)
+    // Tire model (string)
+    // Current air pressure (string, float-parsable) 
+    // Specific detail 1 (string)
+    // Specific detail 2 (string)
+    
+    
     private void addVehicle()
     {
         Console.Clear();
@@ -70,127 +81,114 @@ public class UserInterface
         }
         catch(ArgumentException e)
         {
+            List<string> vehicleDetails = new List<string>();
+            List<string> initialDetails = new List<string>();
+
             Console.Clear();
             Console.WriteLine("Vehicle is not in the garage. Please select vehicle type from the following options:");
             Console.WriteLine(k_VehicleOptionsMenu);
-            
+
             string vehicleTypeInput = Console.ReadLine();
-            // TODO: validate input
-            string modelName = Console.ReadLine();
-            Vehicle vehicle = VehicleCreator.CreateVehicle(vehicleTypeInput, licenseId, modelName);
             
-            if(vehicle.IsElectric())
+            initialDetails.Add(vehicleTypeInput);
+            initialDetails.Add(licenseId);
+            Console.WriteLine("Please enter vehicle model name: ");
+            
+            string modelName = Console.ReadLine();
+            
+            initialDetails.Add(modelName);
+            m_GarageLogic.initialVehicleCreation(initialDetails);
+
+            if(m_GarageLogic.isElectric(licenseId))
             {
-                Console.WriteLine("Please enter battery percentage (0-100): ");
+                Console.WriteLine("please enter the battery percentage (0-100): ");
                 string batteryPercentage = Console.ReadLine();
-                //TODO: validate input
-                float batteryPercentageFloat = float.Parse(batteryPercentage);
-                m_GarageLogic.ChargeBattery(licenseId, batteryPercentageFloat); // TODO: function that set the battery percentage 
+                vehicleDetails.Add(batteryPercentage);
             }
             else
             {
-                Console.WriteLine("Please enter the amount of fuel in the tank in percentage (0 - 100): ");
+                Console.WriteLine("please enter the fuel percentage (0-100): ");
                 string fuelPercentage = Console.ReadLine();
-                //TODO: validate input
+                vehicleDetails.Add(fuelPercentage);
             }
             
-            Console.WriteLine("Please enter tire model name: ");
-            string tireModelName = Console.ReadLine();
-            vehicle.SetTireModelName(tireModelName); // TODO: function that set the tire model name
+            Console.WriteLine("please enter the tire model: ");
+            string tireModel = Console.ReadLine();
+            vehicleDetails.Add(tireModel);
             
-            setTiresState(vehicle);
+            setTiresState(licenseId, vehicleDetails);
+            
+            setVehicleDetails(licenseId, vehicleDetails);
+            
+            m_GarageLogic.AddVehicleFromDetails(vehicleDetails);
+            
+        }
 
-            if(vehicle is Car)
-            {
-                handleCarSpecifics(vehicle);
-            }
-            
-            else if(vehicle is Motorcycle)
-            {
-                handleMotorcycleSpecifics(vehicle);
-            }
-            
-            else if(vehicle is Truck)
-            {
-                handleTruckSpecifics(vehicle);
-            }
-            
-            
-            //TODO: add owner details
-            //TODO: add the vehicle to the garage
+    }
+
+    private void setVehicleDetails(string i_licenseId, List<string> i_vehicleDetails)
+    {
+        if(m_GarageLogic.isCar(i_licenseId))
+        {
+            addCarDetails(i_vehicleDetails);
+        }
+        else if(m_GarageLogic.isMotorcycle(i_licenseId))
+        {
+            addMotorcycleDetails(i_vehicleDetails);
+        }
+        else if(m_GarageLogic.isTruck(i_licenseId))
+        {
+            addTruckDetails(i_vehicleDetails);
         }
     }
 
-    private void handleCarSpecifics(Vehicle i_Vehicle)
+    public void addCarDetails(List<string> i_vehicleDetails)
     {
-        Car car = i_Vehicle as Car;
-        Console.WriteLine("what is the color of the car? please select one of the following options: ");
+        Console.WriteLine("Please enter the number of doors from the following: ");
+        foreach(Car.eNumberOfDoors dorNum in Enum.GetValues(typeof(Car.eNumberOfDoors)))
+        {
+            Console.Write($"{dorNum} ");
+        }
+        string doorsInput = Console.ReadLine();
+        i_vehicleDetails.Add(doorsInput);
+        Console.WriteLine("Please enter the color from the following: ");
         foreach(Car.eColor color in Enum.GetValues(typeof(Car.eColor)))
         {
-            Console.Write($"{color.ToString()} ");
+            Console.Write($"{color} ");
         }
         string colorInput = Console.ReadLine();
-        // TODO: validate input
-        Console.WriteLine("how many doors does the car have? please select one of the following options: ");
-        foreach (Car.eNumberOfDoors door in Enum.GetValues(typeof(Car.eNumberOfDoors)))
-        {
-            Console.Write($"{door.ToString()} ");
-        }
-        string doorInput = Console.ReadLine();
-        // TODO: validate input
-        car.AddSpecificDetails(colorInput, doorInput);
-        // TODO: try catch it throws exception
+        i_vehicleDetails.Add(colorInput);
     }
-
-    private void handleMotorcycleSpecifics(Vehicle i_Vehicle)
+    
+    public void addMotorcycleDetails(List<string> i_vehicleDetails)
     {
-        Motorcycle motorcycle = i_Vehicle as Motorcycle;
-        Console.WriteLine("what is the license type of the motorcycle? please select one of the following options: ");
-        foreach (Motorcycle.eLicenseType licenseType in Enum.GetValues(typeof(Motorcycle.eLicenseType)))
+        Console.WriteLine("Please enter the motorcycle license type from the following: ");
+        foreach(Motorcycle.eLicenseType licenseType in Enum.GetValues(typeof(Motorcycle.eLicenseType)))
         {
-            Console.Write($"{licenseType.ToString()} ");
+            Console.Write($"{licenseType} ");
         }
         string licenseTypeInput = Console.ReadLine();
-        Console.WriteLine("what is the engine capacity of the motorcycle? ");
-        string engineCapacityInput = Console.ReadLine();
-        motorcycle.AddSpecificDetails(licenseTypeInput, engineCapacityInput);
+        i_vehicleDetails.Add(licenseTypeInput);
+        
+        Console.WriteLine("Please enter the motorcycle engine size: ");
+        string engineSizeInput = Console.ReadLine();
+        i_vehicleDetails.Add(engineSizeInput);
+    }
+    
+    public void addTruckDetails(List<string> i_vehicleDetails)
+    {
+        Console.WriteLine("Please enter the truck cargo capacity: ");
+        string cargoCapacityInput = Console.ReadLine();
+        i_vehicleDetails.Add(cargoCapacityInput);
+        
+        Console.WriteLine("Is the truck dangerous? (true/false): ");
+        string isDangerousInput = Console.ReadLine();
+        i_vehicleDetails.Add(isDangerousInput);
     }
 
-    private void handleTruckSpecifics(Vehicle i_Vehicle)
+    private void setTiresState(string i_licenseId, List<string> i_vehicleDetails)
     {
-        Truck truck = i_Vehicle as Truck;
-        Console.WriteLine("Does the truck contain dangerous materials? (true/false)");
-        string containsDangerousMaterialsInput = Console.ReadLine();
-        //TODO handle exception
-        Console.WriteLine("What is the cargo volume of the truck?");
-        string cargoVolumeInput = Console.ReadLine();
-        //TODO handle exception
-        truck.AddSpecificDetails(containsDangerousMaterialsInput, cargoVolumeInput);
-    }
-
-    private void setTiresState(Vehicle i_Vehicle)
-    {
-        Console.WriteLine("Do you want to inflate all tires at once? press y if yes");
-        string userInput = Console.ReadLine();
-        if (userInput == "y")
-        {
-            Console.WriteLine("Please enter the air pressure in percentage (0-100):");
-            string airPressure = Console.ReadLine();
-            //TODO: validate input
-            float percentage = float.Parse(airPressure);
-            i_Vehicle.InflateTires(); // TODO: function that inflates in percentage
-        }
-        else
-        {
-            for(int i = 0; i < i_Vehicle.NumberOfTires(); i++)
-            {
-                Console.WriteLine($"Enter air pressure in percentage (0-100) for tire {i + 1}: ");
-                string airPressure = Console.ReadLine();
-                //TODO: validate input
-                float percentage = float.Parse(airPressure);
-                //TODO: function that inflates in percentage individual tires
-            }
-        }
+        //TODO: add logic to set tires state in the details string array
     }
 
     private void loadVehiclesFromFile()
