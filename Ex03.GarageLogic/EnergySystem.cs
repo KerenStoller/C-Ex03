@@ -5,6 +5,9 @@ public abstract class EnergySystem
     protected float CurrentEnergyAmount { get; set; }
     protected readonly float m_MaxEnergyCapacity;
     protected float EnergyPercentage { get; set; }
+    public abstract bool IsElectric { get; }
+    
+    public abstract List<string> GetDetails();
     
     public void RefillEnergy(float i_EnergyToAdd)
     {
@@ -27,15 +30,11 @@ public abstract class EnergySystem
         }
     }
 
-    public abstract bool IsElectric { get; }
-
     public EnergySystem(float i_MaxEnergyCapacity)
     {
         m_MaxEnergyCapacity = i_MaxEnergyCapacity;
         CurrentEnergyAmount = m_MaxEnergyCapacity;
     }
-    
-    public abstract List<string> GetDetails();
 
     protected List<string> GetGeneralDetails()
     {

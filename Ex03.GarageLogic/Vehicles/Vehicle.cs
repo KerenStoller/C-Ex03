@@ -10,7 +10,6 @@ public abstract class Vehicle
         Repaired,
         Paid
     }
-    
     public readonly string r_ModelName;
     public readonly string r_LicenseID;
     protected Tires m_Tires;
@@ -24,6 +23,10 @@ public abstract class Vehicle
         r_LicenseID = i_LicenseID;
         r_ModelName = i_ModelName;
     }
+    
+    public abstract void AddSpecificDetails(string i_Detail1, string i_Detail2);
+    
+    public abstract List<string> GetDetails();
 
     public void AddGeneralDetails(float i_EnergyPercentage, float i_CurrentEnergy, 
         string i_TireModelName, float i_currentAirPressure)
@@ -32,9 +35,12 @@ public abstract class Vehicle
         m_Tires.AddDetails(i_TireModelName, i_currentAirPressure);
         //Throws ValueRangeException
     }
-
-    public abstract void AddSpecificDetails(string i_Detail1, string i_Detail2);
-
+    
+    public bool IsElectric()
+    {
+        return m_EnergySystem.IsElectric;
+    }
+    
     private void validateElectric()
     {
         if (!IsElectric())
@@ -51,7 +57,7 @@ public abstract class Vehicle
         }
     }
     
-    private void ValidateFuelType(EnergySystem.FuelSystem.e_FuelType i_FuelType)
+    private void validateFuelType(EnergySystem.FuelSystem.e_FuelType i_FuelType)
     {
         validateNotElectric();
         if (((FuelSystem)m_EnergySystem).getFuelType() != i_FuelType)
@@ -60,11 +66,6 @@ public abstract class Vehicle
         }
     }
     
-    public bool IsElectric()
-    {
-        return m_EnergySystem.IsElectric;
-    }
-
     public int NumberOfTires()
     {
         return m_Tires.NumberOfTires;
@@ -77,7 +78,7 @@ public abstract class Vehicle
 
     public void FillTank(EnergySystem.FuelSystem.e_FuelType i_FuelType, float i_AmountOfFuelToAdd)
     {
-        ValidateFuelType(i_FuelType);
+        validateFuelType(i_FuelType);
         m_EnergySystem.RefillEnergy(i_AmountOfFuelToAdd);
     }
 
@@ -86,9 +87,7 @@ public abstract class Vehicle
         validateElectric();
         m_EnergySystem.RefillEnergy(i_TimeToChargeInMinutes);
     }
-
-    public abstract List<string> GetDetails();
-
+    
     protected List<string> GetGeneralVehicleDetails()
     {
         List<string> details = new List<string>();

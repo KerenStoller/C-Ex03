@@ -6,17 +6,14 @@ public abstract class Car : Vehicle
 {
     private const int k_NumberOfTires = 5;
     private const float k_MaxTireAirPressure = 32;
-    
     public enum e_Color
     {
         Yellow, Black, White, Silver
     }
-
     public enum e_NumberOfDoors
     {
         two, three, four, five
     }
-    
     private e_Color Color { get; set; }
     private e_NumberOfDoors NumberOfDoors { get; set; }
 

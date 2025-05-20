@@ -8,7 +8,6 @@ public class Truck : Vehicle
     private const float k_FuelTankCapacityLiter = 135;
     private const int k_NumberOfTires = 12;
     private const float k_MaxTireAirPressure = 27;
-    
     private bool ContainsDangerousMaterials { get; set; }
     private float CargoVolume { get; set; }
 

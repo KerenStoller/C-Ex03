@@ -10,7 +10,6 @@ public abstract class Motorcycle : Vehicle
     {
         A, A2, Ab, B2
     }
-    
     private e_LicenseType LicenseType { get; set; }
     private int EngineCapacity { get; set; }
 

@@ -35,6 +35,7 @@ public class GarageDB
                     lines.Add(lineFromFile);
                 }
             }
+            //TODO: add try catch
         }
         else
         {

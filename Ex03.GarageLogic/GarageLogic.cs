@@ -14,6 +14,7 @@ public class GarageLogic
 
     public void AddVehicleFromDetails(List<string> i_DetailsAboutCar)
     {
+        //TODO: make sure the i_DetailsAboutCar is long enoguh
         Vehicle vehicle;
         string vehicleType = i_DetailsAboutCar[0];
         string licenseID = i_DetailsAboutCar[1];
@@ -139,12 +140,8 @@ public class GarageLogic
 
     public List<string> GetDetails(string i_LicenseID)
     {
-        List<string> listToReturn = new List<string>();
-        
         validateVehicleInGarage(i_LicenseID);
         Vehicle vehicle = m_Vehicles[i_LicenseID];
-        listToReturn =  vehicle.GetDetails();
-
-        return listToReturn;
+        return vehicle.GetDetails();
     }
 }
