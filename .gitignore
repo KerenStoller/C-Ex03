@@ -1,27 +1,41 @@
-# Ignore build output folders recursively (in all projects)
-**/bin/
-**/obj/
+# Build output
+bin/
+obj/
+[Bb]uild/
+[Ll]ogs/
+*.log
 
-# Ignore NuGet packages folder anywhere
-**/packages/
-
-# Ignore NuGet package files
-*.nupkg
-
-# Rider IDE files
-.idea/
-
-# Visual Studio cache and user files
+# Visual Studio
 .vs/
 *.user
 *.suo
+*.sln.docstates
 
-# Ignore logs and temp files
-*.log
-*.tmp
-
-# Ignore any local launch settings
-launchSettings.json
-
-# Ignore Rider workspace files
+# Rider (JetBrains)
+.idea/
 *.sln.iml
+*.DotSettings.user
+
+# Auto-generated
+project.assets.json
+project.nuget.cache
+project.packagespec.json
+*.nuget.*
+*.g.props
+*.g.targets
+*.editorconfig
+*.GeneratedMSBuildEditorConfig.editorconfig
+*.restore.info
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Misc
+TestResults/
+*.cache
+*.dbmdl
+*.orig
+_ReSharper*/
