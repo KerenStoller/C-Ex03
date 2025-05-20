@@ -5,6 +5,6 @@ class Program
     public static void Main()
     {
         UserInterface userInterface = new UserInterface();
-        userInterface.PresentUserOptions();
+        userInterface.GarageMenu();
     }
 }

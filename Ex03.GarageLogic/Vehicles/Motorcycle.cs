@@ -6,14 +6,14 @@ public abstract class Motorcycle : Vehicle
 {
     private const int k_NumberOfTires = 2;
     private const float k_MaxTireAirPressure = 30;
-    public enum e_LicenseType
+    public enum eLicenseType
     {
         A, A2, Ab, B2
     }
-    private e_LicenseType LicenseType { get; set; }
+    private eLicenseType LicenseType { get; set; }
     private int EngineCapacity { get; set; }
 
-    protected Motorcycle(string i_LicenseID, string i_ModelName) : base( i_LicenseID, i_ModelName)
+    protected Motorcycle(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
@@ -30,7 +30,7 @@ public abstract class Motorcycle : Vehicle
     {
         try
         {
-            LicenseType = Enum.Parse<e_LicenseType>(i_LicenseType);
+            LicenseType = Enum.Parse<eLicenseType>(i_LicenseType);
             EngineCapacity = Convert.ToInt32(i_EngineCapacity);
         }
         catch (FormatException e)
@@ -44,7 +44,7 @@ public class ElectricMotorcycle : Motorcycle
 {
     private const float k_MaxBatterCapacityHours = 3.2f;
     
-    public ElectricMotorcycle(string i_LicenseID, string i_ModelName) : base( i_LicenseID, i_ModelName)
+    public ElectricMotorcycle(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new Battery(k_MaxBatterCapacityHours);
     }
@@ -52,10 +52,10 @@ public class ElectricMotorcycle : Motorcycle
 
 public class FuelMotorcycle : Motorcycle
 {
-    private const FuelSystem.e_FuelType k_FuelType = FuelSystem.e_FuelType.Octan98;
+    private const FuelSystem.eFuelType k_FuelType = FuelSystem.eFuelType.Octan98;
     private const float k_FuelTankCapacityLiter = 5.8f;
     
-    public FuelMotorcycle(string i_LicenseID, string i_ModelName) : base( i_LicenseID, i_ModelName)
+    public FuelMotorcycle(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new FuelSystem(k_FuelType, k_FuelTankCapacityLiter);
     }

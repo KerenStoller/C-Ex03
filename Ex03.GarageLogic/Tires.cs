@@ -15,12 +15,12 @@ public class Tires
             CurrAirPressure = i_MaxAirPressure;
         }
 
-        public void setModelName(string i_ModelName)
+        public void SetModelName(string i_ModelName)
         {
             ModelName = i_ModelName;
         }
 
-        public void setCurrentAirPressure(float i_CurrentAirPressure)
+        public void SetCurrentAirPressure(float i_CurrentAirPressure)
         {
             CurrAirPressure = i_CurrentAirPressure;
         }
@@ -60,7 +60,7 @@ public class Tires
     {
         foreach (Tire tire in m_Tires)
         {
-            tire.setCurrentAirPressure(i_CurrentAirPressure);
+            tire.SetCurrentAirPressure(i_CurrentAirPressure);
         }
     }
     
@@ -68,15 +68,15 @@ public class Tires
     {
         foreach (Tire tire in m_Tires)
         {
-            tire.setModelName(i_ModelName);
+            tire.SetModelName(i_ModelName);
         }
     }
 
-    public void AddDetails(string i_TireModelName, float i_currentAirPressure)
+    public void AddDetails(string i_TireModelName, float i_CurrentAirPressure)
     {
-        if (i_currentAirPressure <= r_MaxAirPressure)
+        if (i_CurrentAirPressure <= r_MaxAirPressure)
         {
-            setCurrentAirPressure(i_currentAirPressure);
+            setCurrentAirPressure(i_CurrentAirPressure);
             setModelName(i_TireModelName);
         }
         else

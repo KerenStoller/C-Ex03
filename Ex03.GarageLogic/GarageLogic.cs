@@ -3,13 +3,13 @@
 public class GarageLogic
 {
     private Dictionary<string, Vehicle> m_Vehicles;
-    private GarageDB m_GarageDB;
+    private GarageDb m_GarageDb;
     
     public GarageLogic()
     {
-        m_GarageDB = new GarageDB();
+        m_GarageDb = new GarageDb();
         m_Vehicles = new Dictionary<string, Vehicle>();
-        addVehiclesFromDb();
+        //addVehiclesFromDb(); should be called from the user interface
     }
 
     public void AddVehicleFromDetails(List<string> i_DetailsAboutCar)
@@ -17,16 +17,16 @@ public class GarageLogic
         //TODO: make sure the i_DetailsAboutCar is long enoguh
         Vehicle vehicle;
         string vehicleType = i_DetailsAboutCar[0];
-        string licenseID = i_DetailsAboutCar[1];
+        string licenseId = i_DetailsAboutCar[1];
 
-        validateVehicleNotInGarage(licenseID);
+        validateVehicleNotInGarage(licenseId);
         if (!VehicleCreator.SupportedTypes.Contains(vehicleType))
         {
             throw new ArgumentException($"{vehicleType} is not supported");
         }
         
         string modelName = i_DetailsAboutCar[2];
-        vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseID, modelName);
+        vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseId, modelName);
         string tireModel = i_DetailsAboutCar[4];
         float energyPercentage, currentAirPressure, currentEnergyAmount;
             
@@ -43,52 +43,52 @@ public class GarageLogic
         
         vehicle.AddGeneralDetails(energyPercentage, currentEnergyAmount, tireModel, currentAirPressure);
         vehicle.AddSpecificDetails(i_DetailsAboutCar[7], i_DetailsAboutCar[8]);
-        AddVehicle(vehicle);
+        addVehicle(vehicle);
     }
     
-    private void addVehiclesFromDb()
+    public void AddVehiclesFromDb()
     {
-        foreach (List<string> lineFromFile in m_GarageDB.m_dbVehicles)
+        foreach (List<string> lineFromFile in m_GarageDb.m_DbVehicles)
         {
             AddVehicleFromDetails(lineFromFile);
         }
     }
 
-    private void validateVehicleInGarage(string i_LicenseID)
+    private void validateVehicleInGarage(string i_LicenseId)
     {
-        if (!IsVehicleInGarage(i_LicenseID))
+        if (!IsVehicleInGarage(i_LicenseId))
         {
             throw new ArgumentException("Vehicle is not in garage");
         }
     }
     
-    private void validateVehicleNotInGarage(string i_LicenseID)
+    private void validateVehicleNotInGarage(string i_LicenseId)
     {
-        if (IsVehicleInGarage(i_LicenseID))
+        if (IsVehicleInGarage(i_LicenseId))
         {
             throw new ArgumentException("Vehicle is already in the garage");
         }
     }
     
-    public bool IsVehicleInGarage(string i_LicenseID)
+    public bool IsVehicleInGarage(string i_LicenseId)
     {
-        return m_Vehicles.ContainsKey(i_LicenseID);
+        return m_Vehicles.ContainsKey(i_LicenseId);
     }
 
-    public void WorkOnVehicle(string i_LicenseID)
+    public void WorkOnVehicle(string i_LicenseId)
     {
-        validateVehicleInGarage(i_LicenseID);
-        Vehicle vehicle = m_Vehicles[i_LicenseID];
-        vehicle.VehicleState = Vehicle.e_VehicleState.InRepair;
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
+        vehicle.VehicleState = Vehicle.eVehicleState.InRepair;
     }
     
-    private void AddVehicle(Vehicle vehicle)
+    private void addVehicle(Vehicle i_Vehicle)
     {
-        validateVehicleNotInGarage(vehicle.r_LicenseID);
-        m_Vehicles.Add(vehicle.r_LicenseID, vehicle);
+        validateVehicleNotInGarage(i_Vehicle.r_LicenseId);
+        m_Vehicles.Add(i_Vehicle.r_LicenseId, i_Vehicle);
     }
 
-    public List<string> GetLicenseIDOfAllVehiclesInGarage(Vehicle.e_VehicleState? i_FilterByState = null)
+    public List<string> GetLicenseIdOfAllVehiclesInGarage(Vehicle.eVehicleState? i_FilterByState = null)
     {
         List<string> listToReturn;
         
@@ -112,36 +112,36 @@ public class GarageLogic
         return  listToReturn;
     }
 
-    public void ChangeVehicleState(string i_LicenseID, Vehicle.e_VehicleState i_NewState)
+    public void ChangeVehicleState(string i_LicenseId, Vehicle.eVehicleState i_NewState)
     {
-        validateVehicleInGarage(i_LicenseID);
-        m_Vehicles[i_LicenseID].VehicleState = i_NewState;
+        validateVehicleInGarage(i_LicenseId);
+        m_Vehicles[i_LicenseId].VehicleState = i_NewState;
     }
 
-    public void InflateTires(string i_LicenseID)
+    public void InflateTires(string i_LicenseId)
     {
-        validateVehicleInGarage(i_LicenseID);
-        m_Vehicles[i_LicenseID].InflateTires();
+        validateVehicleInGarage(i_LicenseId);
+        m_Vehicles[i_LicenseId].InflateTires();
     }
 
-    public void FillTank(string i_LicenseID, EnergySystem.FuelSystem.e_FuelType i_FuelType, float i_AmountOfFuelToAdd)
+    public void FillTank(string i_LicenseId, EnergySystem.FuelSystem.eFuelType i_FuelType, float i_AmountOfFuelToAdd)
     {
-        validateVehicleInGarage(i_LicenseID);
-        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
         vehicle.FillTank(i_FuelType, i_AmountOfFuelToAdd);
     }
 
-    public void ChargeBattery(string i_LicenseID, float i_TimeToChargeInMinutes)
+    public void ChargeBattery(string i_LicenseId, float i_TimeToChargeInMinutes)
     {
-        validateVehicleInGarage(i_LicenseID);
-        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
         vehicle.ChargeBattery(i_TimeToChargeInMinutes);
     }
 
-    public List<string> GetDetails(string i_LicenseID)
+    public List<string> GetDetails(string i_LicenseId)
     {
-        validateVehicleInGarage(i_LicenseID);
-        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
         return vehicle.GetDetails();
     }
 }

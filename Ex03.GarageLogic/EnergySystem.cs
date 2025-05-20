@@ -3,7 +3,7 @@ namespace Ex03.GarageLogic.EnergySystem;
 public abstract class EnergySystem
 {
     protected float CurrentEnergyAmount { get; set; }
-    protected readonly float m_MaxEnergyCapacity;
+    protected readonly float r_MMaxEnergyCapacity;
     protected float EnergyPercentage { get; set; }
     public abstract bool IsElectric { get; }
     
@@ -11,13 +11,13 @@ public abstract class EnergySystem
     
     public void RefillEnergy(float i_EnergyToAdd)
     {
-        CurrentEnergyAmount = CurrentEnergyAmount + i_EnergyToAdd > m_MaxEnergyCapacity ?
-            m_MaxEnergyCapacity : CurrentEnergyAmount + i_EnergyToAdd;
+        CurrentEnergyAmount = CurrentEnergyAmount + i_EnergyToAdd > r_MMaxEnergyCapacity ?
+            r_MMaxEnergyCapacity : CurrentEnergyAmount + i_EnergyToAdd;
     }
 
     public void AddDetails(float i_EnergyPercentage, float i_CurrentEnergy)
     {
-        if (i_CurrentEnergy <= m_MaxEnergyCapacity && i_CurrentEnergy > 0)
+        if (i_CurrentEnergy <= r_MMaxEnergyCapacity && i_CurrentEnergy > 0)
         {
             CurrentEnergyAmount = i_CurrentEnergy;
             //TODO: calculate and throw if needed
@@ -25,22 +25,22 @@ public abstract class EnergySystem
         }
         else
         {
-            throw new ValueRangeException(m_MaxEnergyCapacity, 0);
+            throw new ValueRangeException(r_MMaxEnergyCapacity, 0);
             //TODO: how to add message
         }
     }
 
     public EnergySystem(float i_MaxEnergyCapacity)
     {
-        m_MaxEnergyCapacity = i_MaxEnergyCapacity;
-        CurrentEnergyAmount = m_MaxEnergyCapacity;
+        r_MMaxEnergyCapacity = i_MaxEnergyCapacity;
+        CurrentEnergyAmount = r_MMaxEnergyCapacity;
     }
 
     protected List<string> GetGeneralDetails()
     {
         List<string> details = new List<string>();
         details.Add(CurrentEnergyAmount.ToString());
-        details.Add(m_MaxEnergyCapacity.ToString());
+        details.Add(r_MMaxEnergyCapacity.ToString());
         return details;
     }
 }
@@ -58,29 +58,29 @@ public class Battery : EnergySystem
 
 public class FuelSystem : EnergySystem
 {
-    public enum e_FuelType
+    public enum eFuelType
     {
         Soler, Octan95, Octan96, Octan98
     }
 
-    private readonly e_FuelType m_FuelType;
+    private readonly eFuelType r_MFuelType;
     
     public override bool IsElectric => false;
 
-    public FuelSystem(e_FuelType i_FuelType,  float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity)
+    public FuelSystem(eFuelType i_FuelType,  float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity)
     {
-        m_FuelType = i_FuelType;
+        r_MFuelType = i_FuelType;
     }
 
-    public e_FuelType getFuelType()
+    public eFuelType GetFuelType()
     {
-        return m_FuelType;
+        return r_MFuelType;
     }
 
     public override List<string> GetDetails()
     {
         List<string> details = GetGeneralDetails();
-        details.Add(m_FuelType.ToString());
+        details.Add(r_MFuelType.ToString());
         return details;
     }
 }

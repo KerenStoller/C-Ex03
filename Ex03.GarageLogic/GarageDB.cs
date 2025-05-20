@@ -1,15 +1,15 @@
 namespace Ex03.GarageLogic;
 
-public class GarageDB
+public class GarageDb
 {
     private const string k_EndOfFile = "*****";
     private const string k_FileName = "GarageDB.db";
-    public List<List<string>> m_dbVehicles;
+    public List<List<string>> m_DbVehicles;
     
     //TODO - get all vehicles in db, create them with vehicle creator and save them to vehicles
-    public GarageDB()
+    public GarageDb()
     {
-        m_dbVehicles = ReadLinesFromFile();
+        m_DbVehicles = ReadLinesFromFile();
     }
     
     public static List<List<string>> ReadLinesFromFile()

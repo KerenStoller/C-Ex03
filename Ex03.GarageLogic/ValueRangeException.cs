@@ -4,25 +4,25 @@ using System;
 
 public class ValueRangeException : Exception
 {
-    float maxValue, MinValue;
+    float m_MaxValue, m_MinValue;
 
     public ValueRangeException(float i_MaxValue, float i_MinValue)
     {
-        this.maxValue = i_MaxValue;
-        this.MinValue = i_MinValue;
+        this.m_MaxValue = i_MaxValue;
+        this.m_MinValue = i_MinValue;
     }
     
     public ValueRangeException()
     {
     }
 
-    public ValueRangeException(string message)
-        : base(message)
+    public ValueRangeException(string i_Message)
+        : base(i_Message)
     {
     }
 
-    public ValueRangeException(string message, Exception inner)
-        : base(message, inner)
+    public ValueRangeException(string i_Message, Exception i_Inner)
+        : base(i_Message, i_Inner)
     {
     }
 }

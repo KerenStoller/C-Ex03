@@ -6,18 +6,18 @@ public abstract class Car : Vehicle
 {
     private const int k_NumberOfTires = 5;
     private const float k_MaxTireAirPressure = 32;
-    public enum e_Color
+    public enum eColor
     {
         Yellow, Black, White, Silver
     }
-    public enum e_NumberOfDoors
+    public enum eNumberOfDoors
     {
-        two, three, four, five
+        Two, Three, Four, Five
     }
-    private e_Color Color { get; set; }
-    private e_NumberOfDoors NumberOfDoors { get; set; }
+    private eColor Color { get; set; }
+    private eNumberOfDoors NumberOfDoors { get; set; }
 
-    protected Car(string i_LicenseID, string i_ModelName) : base( i_LicenseID, i_ModelName)
+    protected Car(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
@@ -34,8 +34,8 @@ public abstract class Car : Vehicle
     {
         try
         {
-            Color = (e_Color)Enum.Parse(typeof(e_Color), i_Color);
-            NumberOfDoors = (e_NumberOfDoors)Enum.Parse(typeof(e_NumberOfDoors), i_NumberOfDoors);
+            Color = (eColor)Enum.Parse(typeof(eColor), i_Color);
+            NumberOfDoors = (eNumberOfDoors)Enum.Parse(typeof(eNumberOfDoors), i_NumberOfDoors);
         }
         catch (FormatException e)
         {
@@ -47,7 +47,7 @@ public abstract class Car : Vehicle
 public class ElectricCar : Car
 {
     private const float k_MaxBatterCapacityHours = 4.8f;
-    public ElectricCar(string i_LicenseID, string i_ModelName) : base( i_LicenseID, i_ModelName)
+    public ElectricCar(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new Battery(k_MaxBatterCapacityHours);
     }
@@ -55,10 +55,10 @@ public class ElectricCar : Car
 
 public class FuelCar : Car
 {
-    private const FuelSystem.e_FuelType k_FuelType = FuelSystem.e_FuelType.Octan95;
+    private const FuelSystem.eFuelType k_FuelType = FuelSystem.eFuelType.Octan95;
     private const float k_FuelTankCapacityLiter = 48f;
     
-    public FuelCar(string i_LicenseID, string i_ModelName) : base(i_LicenseID, i_ModelName)
+    public FuelCar(string i_LicenseId, string i_ModelName) : base(i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new FuelSystem(k_FuelType, k_FuelTankCapacityLiter);
     }
