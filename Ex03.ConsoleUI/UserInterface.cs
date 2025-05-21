@@ -112,7 +112,8 @@ public class UserInterface
                 break;
 
             default:
-                Console.WriteLine("Invalid menu option. Please try again.");
+                Console.WriteLine("Invalid menu option. Please try again, press any key to continue");
+                Console.ReadLine();
                 break;
         }
         Console.Clear();
@@ -259,6 +260,9 @@ public class UserInterface
     private void loadVehiclesFromFile()
     {
         m_GarageLogic.AddVehiclesFromDb();
+        Console.WriteLine("Vehicles loaded from file.");
+        Console.WriteLine("Press any key to return to menu");
+        Console.ReadLine();
     }
 
     private void PrintAllVehiclesInGarage()
