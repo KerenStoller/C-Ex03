@@ -109,7 +109,7 @@ public class UserInterface
                 m_IsRunning = false;
                 Console.Clear();
                 Console.WriteLine("Exiting the program. Goodbye!");
-                break;
+                return;
 
             default:
                 Console.WriteLine("Invalid menu option. Please try again, press any key to continue");
