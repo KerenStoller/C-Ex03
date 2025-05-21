@@ -1,4 +1,6 @@
-﻿namespace Ex03.GarageLogic;
+﻿using Ex03.GarageLogic.EnergySystem;
+
+namespace Ex03.GarageLogic;
 
 public class GarageLogic
 {
@@ -94,21 +96,22 @@ public class GarageLogic
         m_Vehicles.Add(i_Vehicle.r_LicenseId, i_Vehicle);
     }
 
-    public List<string> GetLicenseIdOfAllVehiclesInGarage(Vehicle.eVehicleState? i_FilterByState = null)
+    public List<string> GetLicenseIdOfAllVehiclesInGarage(string? i_FilterByState)
     {
         List<string> listToReturn;
         
-        if (i_FilterByState == null)
+        if (i_FilterByState == null ||!Enum.TryParse(i_FilterByState, ignoreCase: true, out Vehicle.eVehicleState FilterByState))
         {
             listToReturn = m_Vehicles.Keys.ToList();;
         }
         else
         {
+            
             listToReturn = new List<string>();
             
             foreach (KeyValuePair<string, Vehicle> pair in m_Vehicles)
             {
-                if (pair.Value.VehicleState == i_FilterByState)
+                if (pair.Value.VehicleState == FilterByState)
                 {
                     listToReturn.Add(pair.Key);
                 }
@@ -118,8 +121,16 @@ public class GarageLogic
         return  listToReturn;
     }
 
-    public void ChangeVehicleState(string i_LicenseId, Vehicle.eVehicleState i_NewState)
+    public void ChangeVehicleState(string i_LicenseId, string i_NewStateInString)
     {
+
+        bool validState = Enum.TryParse(i_NewStateInString, ignoreCase: true, out Vehicle.eVehicleState i_NewState);
+
+        if (!validState)
+        {
+            throw new ArgumentException("Invalid vehicle state");
+        }
+
         validateVehicleInGarage(i_LicenseId);
         m_Vehicles[i_LicenseId].VehicleState = i_NewState;
     }
@@ -130,18 +141,41 @@ public class GarageLogic
         m_Vehicles[i_LicenseId].InflateTires();
     }
 
-    public void FillTank(string i_LicenseId, EnergySystem.FuelSystem.eFuelType i_FuelType, float i_AmountOfFuelToAdd)
+    public void FillTank(string i_LicenseId, string i_FuelTypeInString, string i_AmountOfFuelToAddInString)
     {
+
+        bool validInput = float.TryParse(i_AmountOfFuelToAddInString, out float i_AmountOfFuelToAdd);
+        if (!validInput)
+        {
+            throw new FormatException("Invalid amount of fuel to add, must be a number");
+        }
+
+        bool validFuelType = Enum.TryParse(i_FuelTypeInString, ignoreCase:true, out FuelSystem.eFuelType i_FuelType);
+
+        if (!validFuelType)
+        {
+            throw new ArgumentException("Invalid fuel type");
+        }
+
         validateVehicleInGarage(i_LicenseId);
         Vehicle vehicle = m_Vehicles[i_LicenseId];
-        vehicle.FillTank(i_FuelType, i_AmountOfFuelToAdd);
+        vehicle.FillTank(i_FuelType, i_AmountOfFuelToAdd); // TODO: need to add value range exception
     }
 
-    public void ChargeBattery(string i_LicenseId, float i_TimeToChargeInMinutes)
+
+    // example of input handling in the logic using exception
+    public void ChargeBattery(string i_LicenseId, string i_TimeToChargeInMinutes)
     {
+        bool validInput = float.TryParse(i_TimeToChargeInMinutes, out float timeToCharge);
+
+        if(!validInput)
+        {
+            throw new FormatException("Invalid time to charge, must be a number");
+        }
+
         validateVehicleInGarage(i_LicenseId);
         Vehicle vehicle = m_Vehicles[i_LicenseId];
-        vehicle.ChargeBattery(i_TimeToChargeInMinutes);
+        vehicle.ChargeBattery(timeToCharge); // TODO: need to add value range exception
     }
 
     public List<string> GetDetails(string i_LicenseId)
