@@ -37,6 +37,8 @@ public class GarageLogic
         string tireModel = i_DetailsAboutVehicle[1];
         string ownerName = i_DetailsAboutVehicle[3];
         string ownerPhone = i_DetailsAboutVehicle[4];
+        string detail1 = i_DetailsAboutVehicle[5];
+        string detail2 = i_DetailsAboutVehicle[6];
         float energyPercentage, currentAirPressure;
             
         try
@@ -51,7 +53,7 @@ public class GarageLogic
 
         vehicle.AddGeneralDetails(ownerName, ownerPhone, energyPercentage);
         vehicle.AddGeneralTires(tireModel, currentAirPressure);
-        vehicle.AddSpecificDetails(i_DetailsAboutVehicle[5], i_DetailsAboutVehicle[6]);
+        vehicle.AddSpecificDetails(detail1, detail2);
     }
     
     public void AddVehiclesFromDb()
@@ -69,7 +71,7 @@ public class GarageLogic
             
             for (int i = 3; i < lineFromFile.Count; i++)
             {
-                initialDetails.Add(lineFromFile[i]);
+                updateDetails.Add(lineFromFile[i]);
             }
             
             CreateVehicle(initialDetails);
@@ -149,39 +151,17 @@ public class GarageLogic
         m_Vehicles[i_LicenseId].InflateTires();
     }
 
-    public void FillTank(string i_LicenseId, string i_FuelTypeInString, string i_AmountOfFuelToAddInString)
+    public void FillTank(string i_LicenseId, string i_FuelType, float i_AmountOfFuelToAdd)
     {
-
-        bool validInput = float.TryParse(i_AmountOfFuelToAddInString, out float i_AmountOfFuelToAdd);
-        if (!validInput)
-        {
-            throw new FormatException("Invalid amount of fuel to add, must be a number");
-        }
-
-        bool validFuelType = Enum.TryParse(i_FuelTypeInString, ignoreCase:true, out FuelSystem.eFuelType i_FuelType);
-
-        if (!validFuelType)
-        {
-            throw new ArgumentException("Invalid fuel type");
-        }
-
+        //TODO: check valid number in UI
         validateVehicleInGarage(i_LicenseId);
-        m_Vehicles[i_LicenseId].FillTank(i_FuelType, i_AmountOfFuelToAdd); // TODO: need to add value range exception
+        m_Vehicles[i_LicenseId].FillTank(i_FuelType, i_AmountOfFuelToAdd);
     }
-
-
-    // example of input handling in the logic using exception
-    public void ChargeBattery(string i_LicenseId, string i_TimeToChargeInMinutes)
+    
+    public void ChargeBattery(string i_LicenseId, float i_TimeToChargeInMinutes)
     {
-        bool validInput = float.TryParse(i_TimeToChargeInMinutes, out float timeToCharge);
-
-        if(!validInput)
-        {
-            throw new FormatException("Invalid time to charge, must be a number");
-        }
-
         validateVehicleInGarage(i_LicenseId);
-        m_Vehicles[i_LicenseId].ChargeBattery(timeToCharge); // TODO: need to add value range exception
+        m_Vehicles[i_LicenseId].ChargeBattery(i_TimeToChargeInMinutes);
     }
 
     public List<string> GetDetails(string i_LicenseId)

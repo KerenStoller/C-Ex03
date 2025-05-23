@@ -40,6 +40,7 @@ public abstract class EnergySystem
     protected List<string> GetGeneralDetails()
     {
         List<string> details = new List<string>();
+        details.Add(EnergyPercentage.ToString());
         details.Add(CurrentEnergyAmount.ToString());
         details.Add(r_MaxEnergyCapacity.ToString());
         return details;

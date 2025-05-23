@@ -11,7 +11,7 @@ public class UserInterface
 3) Show all vehicles in the garage
 4) Change vehicle status
 5) Inflate tires
-6) Refuel vehicle (only available for fuel vehicles)
+6) Fuel vehicle (only available for fuel vehicles)
 7) Charge vehicle (only available for electric vehicles)
 8) Show vehicle details
 9) Exit";
@@ -29,7 +29,7 @@ public class UserInterface
         ShowAllVehiclesInGarage,
         ChangeVehicleState,
         InflateTires,
-        RefuelVehicle,
+        FuelVehicle,
         ChargeVehicle,
         ShowVehicleDetails,
         Exit
@@ -73,8 +73,6 @@ public class UserInterface
         {
             case menuOptions.LoadVehiclesFromFile:
                 loadVehiclesFromFile();
-                Console.Clear();
-                Console.WriteLine("Vehicles loaded from file.");
                 break;
 
             case menuOptions.AddVehicleToGarage:
@@ -93,8 +91,8 @@ public class UserInterface
                 inflateTires();
                 break;
 
-            case menuOptions.RefuelVehicle:
-                refuelVehicle();
+            case menuOptions.FuelVehicle:
+                fuelVehicle();
                 break;
 
             case menuOptions.ChargeVehicle:
@@ -116,7 +114,7 @@ public class UserInterface
                 Console.ReadLine();
                 break;
         }
-        Console.WriteLine("Press any key to continue");
+        Console.WriteLine("Press any key to return to menu");
         Console.ReadLine();
         Console.Clear();
     }
@@ -280,10 +278,15 @@ public class UserInterface
 
     private void loadVehiclesFromFile()
     {
-        m_GarageLogic.AddVehiclesFromDb();
-        Console.WriteLine("Vehicles loaded from file.");
-        Console.WriteLine("Press any key to return to menu");
-        Console.ReadLine();
+        try
+        {
+            m_GarageLogic.AddVehiclesFromDb();
+            Console.WriteLine("Vehicles loaded from file.");
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 
     private void PrintAllVehiclesInGarage()
@@ -346,7 +349,7 @@ public class UserInterface
         }
     }
 
-    private void refuelVehicle()
+    private void fuelVehicle()
     {
         Console.WriteLine("Please enter registration number: ");
         string licenseId = Console.ReadLine();
@@ -365,22 +368,20 @@ public class UserInterface
         Console.WriteLine("Please enter the amount of fuel to add: ");
 
         string fuelAmountInput = Console.ReadLine();
+        //TODO check positive number
+        float fuelAmount = float.Parse(fuelAmountInput);
 
         try
         {
-            m_GarageLogic.FillTank(licenseId, fuelTypeInput, fuelAmountInput);
+            m_GarageLogic.FillTank(licenseId, fuelTypeInput, fuelAmount);
         }
         catch (FormatException e)
         {
             Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
         }
         catch (ArgumentException e)
         {
             Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
         }
     }
 
@@ -392,22 +393,20 @@ public class UserInterface
         Console.WriteLine("Please enter the amount of time to charge (in minutes): ");
 
         string chargeTimeInput = Console.ReadLine();
+        //TODO check positive number
+        float chargeTime = float.Parse(chargeTimeInput);
 
         try
         {
-            m_GarageLogic.ChargeBattery(licenseId, chargeTimeInput);
+            m_GarageLogic.ChargeBattery(licenseId, chargeTime);
         }
         catch (FormatException e)
         {
             Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
         }
         catch (ArgumentException e)
         {
             Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
         }
     }
 
@@ -417,13 +416,16 @@ public class UserInterface
         string licenseId = Console.ReadLine();
         try
         {
-            m_GarageLogic.GetDetails(licenseId);
+            //TODO: beutify
+            List<string> details = m_GarageLogic.GetDetails(licenseId);
+            foreach (string detail in details)
+            {
+                Console.WriteLine(detail);
+            }
         }
         catch (ArgumentException e)
         {
             Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
         }
     }
 

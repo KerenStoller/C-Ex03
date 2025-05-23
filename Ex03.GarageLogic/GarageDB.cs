@@ -3,10 +3,9 @@ namespace Ex03.GarageLogic;
 public class GarageDb
 {
     private const string k_EndOfFile = "*****";
-    private const string k_FileName = "GarageDB.db";
+    private const string k_FileName = "Vehicles.db";
     public List<List<string>> m_DbVehicles;
     
-    //TODO - get all vehicles in db, create them with vehicle creator and save them to vehicles
     public GarageDb()
     {
         m_DbVehicles = ReadLinesFromFile();
@@ -14,32 +13,36 @@ public class GarageDb
     
     public static List<List<string>> ReadLinesFromFile()
     {
-        //TODO: use readalllines
         List<List<string>> lines = new List<List<string>>();
 
         if (File.Exists(k_FileName))
         {
-            using (StreamReader reader = new StreamReader(k_FileName))
+            try
             {
-                string? line;
+                string[] allLines = File.ReadAllLines(k_FileName);
                 List<string> lineFromFile;
-                
-                while ((line = reader.ReadLine()) != null)
+
+                for (int i = 0; i < allLines.Length; i++)
                 {
+                    string line = allLines[i];
+
                     if (line == k_EndOfFile)
                     {
                         break;
                     }
                     
-                    lineFromFile = new List<string>(line.Split(',', StringSplitOptions.TrimEntries));
+                    lineFromFile = new List<string>(line.Split(','));
                     lines.Add(lineFromFile);
                 }
             }
-            //TODO: add try catch
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while reading the file: " + ex.Message, ex);
+            }
         }
         else
         {
-            //TODO: throw exc
+            throw new FileNotFoundException("The file was not found: " + k_FileName);
         }
 
         return lines;
