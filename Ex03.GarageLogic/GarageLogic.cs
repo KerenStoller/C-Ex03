@@ -153,7 +153,6 @@ public class GarageLogic
 
     public void FillTank(string i_LicenseId, string i_FuelType, float i_AmountOfFuelToAdd)
     {
-        //TODO: check valid number in UI
         validateVehicleInGarage(i_LicenseId);
         m_Vehicles[i_LicenseId].FillTank(i_FuelType, i_AmountOfFuelToAdd);
     }
