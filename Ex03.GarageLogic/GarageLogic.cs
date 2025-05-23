@@ -11,54 +11,69 @@ public class GarageLogic
     {
         m_GarageDb = new GarageDb();
         m_Vehicles = new Dictionary<string, Vehicle>();
-        //addVehiclesFromDb(); should be called from the user interface
     }
 
-    public void initialVehicleCreation(List<string> i_initialDetails)
+    public void CreateVehicle(List<string> i_DetailsAboutVehicle)
     {
-        // TODO
-    }
-    
-    public void AddVehicleFromDetails(List<string> i_DetailsAboutCar)
-    {
-        //TODO: make sure the i_DetailsAboutCar is long enoguh 
-        //TDOD: need to add owner name and phone number
         Vehicle vehicle;
-        string vehicleType = i_DetailsAboutCar[0];
-        string licenseId = i_DetailsAboutCar[1];
-
+        string vehicleType = i_DetailsAboutVehicle[0];
+        string licenseId = i_DetailsAboutVehicle[1];
+        
         validateVehicleNotInGarage(licenseId);
         if (!VehicleCreator.SupportedTypes.Contains(vehicleType))
         {
             throw new ArgumentException($"{vehicleType} is not supported");
         }
         
-        string modelName = i_DetailsAboutCar[2];
+        string modelName = i_DetailsAboutVehicle[2];
         vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseId, modelName);
-        string tireModel = i_DetailsAboutCar[4];
-        float energyPercentage, currentAirPressure, currentEnergyAmount;
+        m_Vehicles.Add(licenseId, vehicle);
+    }
+
+    public void UpdateVehicle(string i_LicenseID, List<string> i_DetailsAboutVehicle)
+    {
+        validateVehicleInGarage(i_LicenseID);
+        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        string tireModel = i_DetailsAboutVehicle[1];
+        string ownerName = i_DetailsAboutVehicle[3];
+        string ownerPhone = i_DetailsAboutVehicle[4];
+        float energyPercentage, currentAirPressure;
             
         try
         {
-            energyPercentage = float.Parse(i_DetailsAboutCar[3]);
-            currentAirPressure = float.Parse(i_DetailsAboutCar[5]);
-            currentEnergyAmount = float.Parse(i_DetailsAboutCar[6]);
+            energyPercentage = float.Parse(i_DetailsAboutVehicle[0]);
+            currentAirPressure = float.Parse(i_DetailsAboutVehicle[2]);
         }
         catch (FormatException e)
         {
             throw new FormatException($"Invalid number format in vehicle details: {e.Message}", e);
         }
-        
-        vehicle.AddGeneralDetails(energyPercentage, currentEnergyAmount, tireModel, currentAirPressure);
-        vehicle.AddSpecificDetails(i_DetailsAboutCar[7], i_DetailsAboutCar[8]);
-        addVehicle(vehicle);
+
+        vehicle.AddGeneralDetails(ownerName, ownerPhone, energyPercentage);
+        vehicle.AddGeneralTires(tireModel, currentAirPressure);
+        vehicle.AddSpecificDetails(i_DetailsAboutVehicle[5], i_DetailsAboutVehicle[6]);
     }
     
     public void AddVehiclesFromDb()
     {
         foreach (List<string> lineFromFile in m_GarageDb.m_DbVehicles)
         {
-            AddVehicleFromDetails(lineFromFile);
+            List<string> initialDetails = new List<string>();
+            List<string> updateDetails = new List<string>();
+            string licenseId = lineFromFile[1];
+
+            for (int i = 0; i < 3; i++)
+            {
+                initialDetails.Add(lineFromFile[i]);
+            }
+            
+            for (int i = 3; i < lineFromFile.Count; i++)
+            {
+                initialDetails.Add(lineFromFile[i]);
+            }
+            
+            CreateVehicle(initialDetails);
+            UpdateVehicle(licenseId, updateDetails);
         }
     }
 
@@ -86,14 +101,7 @@ public class GarageLogic
     public void WorkOnVehicle(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        vehicle.VehicleState = Vehicle.eVehicleState.InRepair;
-    }
-    
-    private void addVehicle(Vehicle i_Vehicle)
-    {
-        validateVehicleNotInGarage(i_Vehicle.r_LicenseId);
-        m_Vehicles.Add(i_Vehicle.r_LicenseId, i_Vehicle);
+        m_Vehicles[i_LicenseId].VehicleState = Vehicle.eVehicleState.InRepair;
     }
 
     public List<string> GetLicenseIdOfAllVehiclesInGarage(string? i_FilterByState)
@@ -158,8 +166,7 @@ public class GarageLogic
         }
 
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        vehicle.FillTank(i_FuelType, i_AmountOfFuelToAdd); // TODO: need to add value range exception
+        m_Vehicles[i_LicenseId].FillTank(i_FuelType, i_AmountOfFuelToAdd); // TODO: need to add value range exception
     }
 
 
@@ -174,49 +181,41 @@ public class GarageLogic
         }
 
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        vehicle.ChargeBattery(timeToCharge); // TODO: need to add value range exception
+        m_Vehicles[i_LicenseId].ChargeBattery(timeToCharge); // TODO: need to add value range exception
     }
 
     public List<string> GetDetails(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        return vehicle.GetDetails();
+        return m_Vehicles[i_LicenseId].GetDetails();
     }
     
-    public bool isCar(string i_LicenseId)
+    public bool IsCar(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        return vehicle is Car;
+        return m_Vehicles[i_LicenseId] is Car;
     }
     
-    public bool isTruck(string i_LicenseId)
+    public bool IsTruck(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        return vehicle is Truck;
+        return m_Vehicles[i_LicenseId] is Truck;
     }
     
-    public bool isMotorcycle(string i_LicenseId)
+    public bool IsMotorcycle(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        return vehicle is Motorcycle;
+        return m_Vehicles[i_LicenseId] is Motorcycle;
     }
-    public bool isElectric(string i_LicenseId)
+    public bool IsElectric(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        return vehicle.IsElectric();
+        return m_Vehicles[i_LicenseId].IsElectric();
     }
     
-    public int getNumberOfTires(string i_LicenseId)
+    public int GetNumberOfTires(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
-        Vehicle vehicle = m_Vehicles[i_LicenseId];
-        return vehicle.NumberOfTires();
+        return m_Vehicles[i_LicenseId].NumberOfTires();
     }
-    
 }

@@ -9,6 +9,8 @@ public class Tires
         private string ModelName { get; set;}
         private readonly float r_MaxAirPressure;
         private float CurrAirPressure {get; set;}
+        public const float k_MinPressure = 0f;
+        public const float k_MaxPressure = 100f;
 
         public Tire(string i_ModelName, float i_MaxAirPressure)
         {
@@ -58,33 +60,45 @@ public class Tires
         }
     }
 
-    private void setCurrentAirPressure(float i_CurrentAirPressure)
-    {
-        foreach (Tire tire in m_Tires)
-        {
-            tire.SetCurrentAirPressure(i_CurrentAirPressure);
-        }
-    }
-    
-    private void setModelName(string i_ModelName)
-    {
-        foreach (Tire tire in m_Tires)
-        {
-            tire.SetModelName(i_ModelName);
-        }
-    }
-
-    public void AddDetails(string i_TireModelName, float i_CurrentAirPressure)
+    public void AddDetailsForAllTires(string i_TireModelName, float i_CurrentAirPressure)
     {
         if (i_CurrentAirPressure <= r_MaxAirPressure)
         {
-            setCurrentAirPressure(i_CurrentAirPressure);
-            setModelName(i_TireModelName);
+            foreach(Tire tire in m_Tires)
+            {
+                tire.SetCurrentAirPressure(i_CurrentAirPressure);
+                tire.SetModelName(i_TireModelName);
+            }
         }
         else
         {
-            throw new ValueRangeException(r_MaxAirPressure, 0);
+            throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure);
             //TODO: how to add message
+        }
+    }
+
+    public void AddDetailsForTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
+    {
+        if(i_TireModelNamesAndPressures.Count != NumberOfTires)
+        {
+            throw new ArgumentException("Wrong number of Tires");
+        }
+        for(int i = 0; i < NumberOfTires; i++)
+        {
+            KeyValuePair<string, float> tireInfo = i_TireModelNamesAndPressures[i];
+            string tireModelName = tireInfo.Key;
+            float currentAirPressure = tireInfo.Value;
+            
+            if(currentAirPressure <= r_MaxAirPressure)
+            {
+                m_Tires[i/2].SetCurrentAirPressure(currentAirPressure);
+                m_Tires[i/2].SetModelName(tireModelName);
+            }
+            else
+            {
+                throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure);
+                //TODO: how to add message
+            }
         }
     }
 
@@ -114,11 +128,11 @@ public class Tires
         {
             throw new ArgumentOutOfRangeException(nameof(i_TireIndex));
         }
-        if(i_PressurePercentage < 0f || i_PressurePercentage > 100f)
+        if(i_PressurePercentage < Tire.k_MinPressure || i_PressurePercentage > Tire.k_MaxPressure)
         {
             throw new ArgumentOutOfRangeException(nameof(i_PressurePercentage));
         }
-        float newPressure = (i_PressurePercentage / 100f) * r_MaxAirPressure;
+        float newPressure = (i_PressurePercentage / Tire.k_MaxPressure) * r_MaxAirPressure;
         m_Tires[i_TireIndex].SetCurrentAirPressure(newPressure);
     }
 }

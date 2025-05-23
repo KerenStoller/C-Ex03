@@ -2,8 +2,10 @@ namespace Ex03.GarageLogic.EnergySystem;
 
 public abstract class EnergySystem
 {
+    private const float k_MaxPercentage = 100;
+    private const float k_MinPercentage = 0;
     protected float CurrentEnergyAmount { get; set; }
-    protected readonly float r_MMaxEnergyCapacity;
+    protected readonly float r_MaxEnergyCapacity;
     protected float EnergyPercentage { get; set; }
     public abstract bool IsElectric { get; }
     
@@ -11,36 +13,35 @@ public abstract class EnergySystem
     
     public void RefillEnergy(float i_EnergyToAdd)
     {
-        CurrentEnergyAmount = CurrentEnergyAmount + i_EnergyToAdd > r_MMaxEnergyCapacity ?
-            r_MMaxEnergyCapacity : CurrentEnergyAmount + i_EnergyToAdd;
+        CurrentEnergyAmount = CurrentEnergyAmount + i_EnergyToAdd > r_MaxEnergyCapacity ?
+            r_MaxEnergyCapacity : CurrentEnergyAmount + i_EnergyToAdd;
     }
 
-    public void AddDetails(float i_EnergyPercentage, float i_CurrentEnergy)
+    public void AddDetails(float i_EnergyPercentage)
     {
-        if (i_CurrentEnergy <= r_MMaxEnergyCapacity && i_CurrentEnergy > 0)
+        if (i_EnergyPercentage >= k_MinPercentage && i_EnergyPercentage <= k_MaxPercentage)
         {
-            CurrentEnergyAmount = i_CurrentEnergy;
-            //TODO: calculate and throw if needed
+            CurrentEnergyAmount = r_MaxEnergyCapacity * i_EnergyPercentage * 1/k_MaxPercentage;
             EnergyPercentage = i_EnergyPercentage;
         }
         else
         {
-            throw new ValueRangeException(r_MMaxEnergyCapacity, 0);
+            throw new ValueRangeException(i_EnergyPercentage, k_MinPercentage);
             //TODO: how to add message
         }
     }
     
     public EnergySystem(float i_MaxEnergyCapacity)
     {
-        r_MMaxEnergyCapacity = i_MaxEnergyCapacity;
-        CurrentEnergyAmount = r_MMaxEnergyCapacity;
+        r_MaxEnergyCapacity = i_MaxEnergyCapacity;
+        CurrentEnergyAmount = r_MaxEnergyCapacity;
     }
 
     protected List<string> GetGeneralDetails()
     {
         List<string> details = new List<string>();
         details.Add(CurrentEnergyAmount.ToString());
-        details.Add(r_MMaxEnergyCapacity.ToString());
+        details.Add(r_MaxEnergyCapacity.ToString());
         return details;
     }
 }

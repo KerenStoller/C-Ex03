@@ -10,10 +10,10 @@ public abstract class Vehicle
         Repaired,
         Paid
     }
+    
     public readonly string r_ModelName;
     public readonly string r_LicenseId;
     protected Tires m_Tires;
-    
     protected string m_OwnerName;
     private string m_OwnerPhoneNumber;
     public eVehicleState VehicleState { get; set; } =  eVehicleState.InRepair;
@@ -25,17 +25,26 @@ public abstract class Vehicle
         r_ModelName = i_ModelName;
     }
     
-    
     public abstract void AddSpecificDetails(string i_Detail1, string i_Detail2);
     
     public abstract List<string> GetDetails();
 
-    public void AddGeneralDetails(float i_EnergyPercentage, float i_CurrentEnergy, 
-        string i_TireModelName, float i_CurrentAirPressure)
+    public void AddGeneralDetails(string i_OwnerName, string i_OwnerPhone, float i_EnergyPercentage)
     {
-        m_EnergySystem.AddDetails(i_EnergyPercentage, i_CurrentEnergy);
-        m_Tires.AddDetails(i_TireModelName, i_CurrentAirPressure);
+        m_OwnerName = i_OwnerName;
+        m_OwnerPhoneNumber = i_OwnerPhone;
+        m_EnergySystem.AddDetails(i_EnergyPercentage);
         //Throws ValueRangeException
+    }
+
+    public void AddGeneralTires(string i_TireModelName, float i_CurrentAirPressure)
+    {
+        m_Tires.AddDetailsForAllTires(i_TireModelName, i_CurrentAirPressure);
+    }
+    
+    public void AddSpecificTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
+    {
+        m_Tires.AddDetailsForTires(i_TireModelNamesAndPressures);
     }
     
     public bool IsElectric()
@@ -100,12 +109,6 @@ public abstract class Vehicle
         details.AddRange(m_Tires.GetDetails());
         details.AddRange(m_EnergySystem.GetDetails());
         return details;
-    }
-    
-    public void SetOwnerDetails(string i_OwnerName, string i_OwnerPhoneNumber)
-    {
-        m_OwnerName = i_OwnerName;
-        m_OwnerPhoneNumber = i_OwnerPhoneNumber;
     }
     
     public void SetPressureOfSingleTire(int i_Index, float i_AirPressure)

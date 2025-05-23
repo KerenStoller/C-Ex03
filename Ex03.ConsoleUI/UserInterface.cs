@@ -116,6 +116,8 @@ public class UserInterface
                 Console.ReadLine();
                 break;
         }
+        Console.WriteLine("Press any key to continue");
+        Console.ReadLine();
         Console.Clear();
     }
 
@@ -140,64 +142,76 @@ public class UserInterface
         {
             m_GarageLogic.WorkOnVehicle(licenseId);
         }
-        catch (ArgumentException e)
+        catch
         {
-            List<string> vehicleDetails = new List<string>();
-            List<string> initialDetails = new List<string>();
-
-            Console.Clear();
-            Console.WriteLine("Vehicle is not in the garage. Please select vehicle type from the following options:");
-            Console.WriteLine(k_VehicleOptionsMenu);
-
-            string vehicleTypeInput = Console.ReadLine();
-
-            initialDetails.Add(vehicleTypeInput);
-            initialDetails.Add(licenseId);
-            Console.WriteLine("Please enter vehicle model name: ");
-
-            string modelName = Console.ReadLine();
-
-            initialDetails.Add(modelName);
-            m_GarageLogic.initialVehicleCreation(initialDetails);
-
-            if (m_GarageLogic.isElectric(licenseId))
+            try
             {
-                Console.WriteLine("please enter the battery percentage (0-100): ");
-                string batteryPercentage = Console.ReadLine();
-                vehicleDetails.Add(batteryPercentage);
+                getDetailsAndCreateVehicle(licenseId);
+                getVehicleDetailsAndUpdate(licenseId);
             }
-            else
+            catch (ArgumentException e)
             {
-                Console.WriteLine("please enter the fuel percentage (0-100): ");
-                string fuelPercentage = Console.ReadLine();
-                vehicleDetails.Add(fuelPercentage);
+                Console.WriteLine(e.Message);
             }
+        }
+    }
 
-            Console.WriteLine("please enter the tire model: ");
-            string tireModel = Console.ReadLine();
-            vehicleDetails.Add(tireModel);
+    private void getDetailsAndCreateVehicle(string i_LicenseID)
+    {
+        List<string> creationDetails = new List<string>();
+        string vehicleType, modelName;
+        
+        Console.Clear();
+        Console.WriteLine("Vehicle is not in the garage. Please select vehicle type from the following options:");
+        Console.WriteLine(k_VehicleOptionsMenu);
+        //TODO convert to chosen option
+        vehicleType = Console.ReadLine();
+        vehicleType = "FuelCar";
+        Console.WriteLine("Please enter vehicle model name: ");
+        modelName = Console.ReadLine();
+        creationDetails.Add(vehicleType);
+        creationDetails.Add(i_LicenseID);
+        creationDetails.Add(modelName);
+        m_GarageLogic.CreateVehicle(creationDetails);
+    }
 
-            setTiresState(licenseId, vehicleDetails);
-
-            setVehicleDetails(licenseId, vehicleDetails);
-
-            m_GarageLogic.AddVehicleFromDetails(vehicleDetails);
-
+    private void getVehicleDetailsAndUpdate(string licenseId)
+    {
+        List<string> updateVehicleDetails = new List<string>();
+        string batteryPercentage, fuelPercentage, tireModel;
+        
+        if(m_GarageLogic.IsElectric(licenseId))
+        {
+            Console.WriteLine("please enter the battery percentage (0-100): ");
+            batteryPercentage = Console.ReadLine();
+            updateVehicleDetails.Add(batteryPercentage);
+        }
+        else
+        {
+            Console.WriteLine("please enter the fuel percentage (0-100): ");
+            fuelPercentage = Console.ReadLine();
+            updateVehicleDetails.Add(fuelPercentage);
         }
 
+        Console.WriteLine("please enter the tire model: ");
+        tireModel = Console.ReadLine();
+        updateVehicleDetails.Add(tireModel);
+        setTiresState(licenseId, updateVehicleDetails);
+        setVehicleDetails(licenseId, updateVehicleDetails);
+        m_GarageLogic.UpdateVehicle(licenseId, updateVehicleDetails);
     }
 
     private void setVehicleDetails(string i_licenseId, List<string> i_vehicleDetails)
     {
-        if (m_GarageLogic.isCar(i_licenseId))
+        if (m_GarageLogic.IsCar(i_licenseId))
         {
             addCarDetails(i_vehicleDetails);
         }
-        else if (m_GarageLogic.isMotorcycle(i_licenseId))
+        else if (m_GarageLogic.IsMotorcycle(i_licenseId))
         {
             addMotorcycleDetails(i_vehicleDetails);
         }
-        else if (m_GarageLogic.isTruck(i_licenseId))
+        else if (m_GarageLogic.IsTruck(i_licenseId))
         {
             addTruckDetails(i_vehicleDetails);
         }
@@ -255,6 +269,13 @@ public class UserInterface
     private void setTiresState(string i_licenseId, List<string> i_vehicleDetails)
     {
         //TODO: add logic to set tires state in the details string array
+        //functions u can use:
+        //1) public void AddSpecificTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
+        //      input: list of pairs: modelName and currentPressure. 
+        //      throws 2 exceptions: 1) wrong number of tires 2) wrong current pressure (more than max or less than 0)
+        //2) public void AddDetailsForAllTires(string i_TireModelName, float i_CurrentAirPressure)
+        //      input: modelName and currentPressure. 
+        //      throws only wrong current pressure
     }
 
     private void loadVehiclesFromFile()
@@ -269,12 +290,18 @@ public class UserInterface
     {
         Console.WriteLine("What state do you want to show? chose from the following: press any other key if all ");
 
-        PrintAllVehiclesInGarage();
+        //TODO:
+        //PrintAllVehiclesInGarage();
 
         string? userInput = Console.ReadLine();
 
         List<string> vehicles = m_GarageLogic.GetLicenseIdOfAllVehiclesInGarage(userInput);
 
+        if(vehicles.Count == 0)
+        {
+            Console.WriteLine("There are no vehicles in garage.");    
+        }
+        
         foreach (string reg in vehicles)
         {
             Console.WriteLine(reg);
