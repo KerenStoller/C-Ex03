@@ -3,13 +3,24 @@ namespace Ex03.ConsoleUI
 {
     public class InputValidator
     {
-        public static float checkValidFloat(string inputToCheck)
+        private static float checkValidFloat(string inputToCheck)
         {
             bool isValid = float.TryParse(inputToCheck, out float result);
 
             if (!isValid)
             {
                 throw new FormatException("Input is not a valid float number.");
+            }
+            return result;
+        }
+
+        public static float checkValidPositiveFloat(string inputToCheck)
+        {
+            float result = checkValidFloat(inputToCheck);
+            
+            if (result < 0)
+            {
+                throw new ArgumentOutOfRangeException("Input must be a positive number.");
             }
             return result;
         }
