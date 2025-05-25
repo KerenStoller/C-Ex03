@@ -23,5 +23,23 @@ namespace Ex03.ConsoleUI
             }
             return result;
         }
+
+        public static void checkValidPhoneNumber(string inputToCheck)
+        {
+
+            if(inputToCheck.Length != 10)
+            {
+                throw new ArgumentException("Phone number must be 10 digits");
+                
+            }
+
+            foreach(char c in inputToCheck)
+            {
+                if(c < '0' || c > '9')
+                {
+                    throw new FormatException("Phone number must contain only digits");
+                }
+            }
+        }
     }
 }

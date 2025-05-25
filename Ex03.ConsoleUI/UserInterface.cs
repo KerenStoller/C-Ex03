@@ -135,15 +135,6 @@ public class UserInterface
     }
 
 
-    // Vehicle type (string)
-    // License ID (string)
-    // Model name (string)
-    // Energy percentage (string, float-parsable)
-    // Tire model (string)
-    // Current air pressure (string, float-parsable) 
-    // Specific detail 1 (string)
-    // Specific detail 2 (string)
-
 
     private void addVehicle()
     {
@@ -249,8 +240,19 @@ public class UserInterface
 
     }
 
+
+    //    1.    [0]: energyPercentage(string, should be parseable as float)
+    //    2.	[1]: tireModel(string)
+    //    3.	[2]: currentAirPressure(string, should be parseable as float)
+    //    4.    [3]: ownerName(string)
+    //    5.	[4]: ownerPhone(string)
+    //    6.	[5]: detail1(string, vehicle-specific)
+    //    7.	[6]: detail2(string, vehicle-specific)
+
     private void getVehicleDetailsAndUpdate(string i_LicenseId)
     {
+        bool returnToMenu = false;
+
         List<string> updateVehicleDetails = new List<string>();
         string batteryPercentage, fuelPercentage, tireModel;
         
@@ -271,7 +273,41 @@ public class UserInterface
         tireModel = Console.ReadLine();
         updateVehicleDetails.Add(tireModel);
         setTiresState(i_LicenseId, updateVehicleDetails, tireModel);
+
+        Console.WriteLine("Please enter the owner name: ");
+        string ownerName = Console.ReadLine();
+        updateVehicleDetails.Add(ownerName);
+
+        Console.WriteLine("Please enter the owner phone number: ");
+        string ownerPhone = Console.ReadLine();
+
+        try
+        {
+            InputValidator.checkValidPhoneNumber(ownerPhone);
+            updateVehicleDetails.Add(ownerPhone);
+        }
+        catch(FormatException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+            returnToMenu = true;
+        }
+
+        catch(ArgumentException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+        }
+
+        if(returnToMenu)
+        {
+            return;
+        }
+
         setVehicleDetails(i_LicenseId, updateVehicleDetails);
+
         try
         {
             m_GarageLogic.UpdateVehicle(i_LicenseId, updateVehicleDetails);
@@ -303,16 +339,6 @@ public class UserInterface
 
     private void addCarDetails(List<string> i_VehicleDetails)
     {
-        Console.WriteLine("Please enter the number of doors from the following: ");
-
-        foreach (Car.eNumberOfDoors dorNum in Enum.GetValues(typeof(Car.eNumberOfDoors)))
-        {
-            Console.Write($"{dorNum} ");
-        }
-        Console.WriteLine();
-        string doorsInput = Console.ReadLine();
-
-        i_VehicleDetails.Add(doorsInput);
         Console.WriteLine("Please enter the color from the following: ");
 
         foreach (Car.eColor color in Enum.GetValues(typeof(Car.eColor)))
@@ -320,8 +346,20 @@ public class UserInterface
             Console.Write($"{color} ");
         }
 
+        Console.WriteLine();
         string colorInput = Console.ReadLine();
         i_VehicleDetails.Add(colorInput);
+
+        Console.WriteLine("Please enter the number of doors from the following: ");
+
+        foreach (Car.eNumberOfDoors dorNum in Enum.GetValues(typeof(Car.eNumberOfDoors)))
+        {
+            Console.Write($"{dorNum} ");
+        }
+
+        Console.WriteLine();
+        string doorsInput = Console.ReadLine();
+        i_VehicleDetails.Add(doorsInput);
     }
 
     private void addMotorcycleDetails(List<string> i_VehicleDetails)
@@ -575,16 +613,32 @@ public class UserInterface
         string licenseId = Console.ReadLine();
         try
         {
-            //TODO: beutify
             List<string> details = m_GarageLogic.GetDetails(licenseId);
+            Console.WriteLine("=========================================");
+            Console.WriteLine("         Vehicle Details Summary         ");
+            Console.WriteLine("=========================================");
             foreach (string detail in details)
             {
-                Console.WriteLine(detail);
+                // Try to split on ':' for key-value formatting
+                int separatorIndex = detail.IndexOf(':');
+                if (separatorIndex > 0 && separatorIndex < detail.Length - 1)
+                {
+                    string key = detail.Substring(0, separatorIndex).Trim();
+                    string value = detail.Substring(separatorIndex + 1).Trim();
+                    Console.WriteLine($"{key,-25}: {value}");
+                }
+                else
+                {
+                    Console.WriteLine(detail);
+                }
             }
+            Console.WriteLine("=========================================");
         }
         catch (ArgumentException e)
         {
             Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
         }
     }
 
