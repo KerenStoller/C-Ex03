@@ -6,6 +6,7 @@ public class GarageLogic
 {
     private Dictionary<string, Vehicle> m_Vehicles;
     private GarageDb m_GarageDb;
+    private const bool k_SetAllTiresAtOnce = true;
     
     public GarageLogic()
     {
@@ -30,29 +31,50 @@ public class GarageLogic
         m_Vehicles.Add(licenseId, vehicle);
     }
 
-    public void UpdateVehicle(string i_LicenseId, List<string> i_DetailsAboutVehicle)
+    public void UpdateVehicle(string i_LicenseId, List<string> i_DetailsAboutVehicle, bool i_AreAllTiresTheSame)
     {
         validateVehicleInGarage(i_LicenseId);
         Vehicle vehicle = m_Vehicles[i_LicenseId];
-        string tireModel = i_DetailsAboutVehicle[1];
-        string ownerName = i_DetailsAboutVehicle[3];
-        string ownerPhone = i_DetailsAboutVehicle[4];
-        string detail1 = i_DetailsAboutVehicle[5];
-        string detail2 = i_DetailsAboutVehicle[6];
+        int numberOfTires = vehicle.NumberOfTires();
+        int index = 0;
+        List<KeyValuePair<string, float>> listOfTires = new List<KeyValuePair<string, float>>();
+        string tireModel, ownerName, ownerPhone, detail1, detail2;
         float energyPercentage, currentAirPressure;
             
         try
         {
-            energyPercentage = float.Parse(i_DetailsAboutVehicle[0]);
-            currentAirPressure = float.Parse(i_DetailsAboutVehicle[2]);
+            energyPercentage = float.Parse(i_DetailsAboutVehicle[index++]);
+            
+            for (int i = 0; i < numberOfTires; i++)
+            {
+                tireModel = i_DetailsAboutVehicle[index++];
+                currentAirPressure = float.Parse(i_DetailsAboutVehicle[index++]);
+
+                if(i_AreAllTiresTheSame)
+                {
+                    vehicle.AddGeneralTires(tireModel, currentAirPressure);
+                    break;
+                }
+                
+                listOfTires.Add(new KeyValuePair<string, float>(tireModel, currentAirPressure));
+            }
         }
         catch (FormatException e)
         {
             throw new FormatException($"Invalid number format in vehicle details: {e.Message}", e);
         }
 
+        if(!i_AreAllTiresTheSame)
+        {
+            vehicle.AddSpecificTires(listOfTires);
+        }
+            
+        ownerName = i_DetailsAboutVehicle[index++];
+        ownerPhone = i_DetailsAboutVehicle[index++];
+        detail1 = i_DetailsAboutVehicle[index++];
+        detail2 = i_DetailsAboutVehicle[index++];
+
         vehicle.AddGeneralDetails(ownerName, ownerPhone, energyPercentage);
-        vehicle.AddGeneralTires(tireModel, currentAirPressure);
         vehicle.AddSpecificDetails(detail1, detail2);
     }
     
@@ -75,7 +97,7 @@ public class GarageLogic
             }
             
             CreateVehicle(initialDetails);
-            UpdateVehicle(licenseId, updateDetails);
+            UpdateVehicle(licenseId, updateDetails, k_SetAllTiresAtOnce);
         }
     }
 
