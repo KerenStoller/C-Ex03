@@ -26,8 +26,7 @@ public abstract class EnergySystem
         }
         else
         {
-            throw new ValueRangeException(i_EnergyPercentage, k_MinPercentage);
-            //TODO: how to add message
+            throw new ValueRangeException(i_EnergyPercentage, k_MinPercentage, "Energy percentage outside of range");
         }
     }
     

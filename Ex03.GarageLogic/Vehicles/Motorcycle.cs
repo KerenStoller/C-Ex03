@@ -8,7 +8,7 @@ public abstract class Motorcycle : Vehicle
     private const float k_MaxTireAirPressure = 30;
     public enum eLicenseType
     {
-        A, A2, AB, B2
+        A, A2, Ab, B2
     }
     private eLicenseType LicenseType { get; set; }
     private int EngineCapacity { get; set; }

@@ -30,10 +30,10 @@ public class GarageLogic
         m_Vehicles.Add(licenseId, vehicle);
     }
 
-    public void UpdateVehicle(string i_LicenseID, List<string> i_DetailsAboutVehicle)
+    public void UpdateVehicle(string i_LicenseId, List<string> i_DetailsAboutVehicle)
     {
-        validateVehicleInGarage(i_LicenseID);
-        Vehicle vehicle = m_Vehicles[i_LicenseID];
+        validateVehicleInGarage(i_LicenseId);
+        Vehicle vehicle = m_Vehicles[i_LicenseId];
         string tireModel = i_DetailsAboutVehicle[1];
         string ownerName = i_DetailsAboutVehicle[3];
         string ownerPhone = i_DetailsAboutVehicle[4];
@@ -110,7 +110,7 @@ public class GarageLogic
     {
         List<string> listToReturn;
         
-        if (i_FilterByState == null ||!Enum.TryParse(i_FilterByState, ignoreCase: true, out Vehicle.eVehicleState FilterByState))
+        if (i_FilterByState == null ||!Enum.TryParse(i_FilterByState, ignoreCase: true, out Vehicle.eVehicleState filterByState))
         {
             listToReturn = m_Vehicles.Keys.ToList();;
         }
@@ -121,7 +121,7 @@ public class GarageLogic
             
             foreach (KeyValuePair<string, Vehicle> pair in m_Vehicles)
             {
-                if (pair.Value.VehicleState == FilterByState)
+                if (pair.Value.VehicleState == filterByState)
                 {
                     listToReturn.Add(pair.Key);
                 }
@@ -134,7 +134,7 @@ public class GarageLogic
     public void ChangeVehicleState(string i_LicenseId, string i_NewStateInString)
     {
 
-        bool validState = Enum.TryParse(i_NewStateInString, ignoreCase: true, out Vehicle.eVehicleState i_NewState);
+        bool validState = Enum.TryParse(i_NewStateInString, ignoreCase: true, out Vehicle.eVehicleState iNewState);
 
         if (!validState)
         {
@@ -142,7 +142,7 @@ public class GarageLogic
         }
 
         validateVehicleInGarage(i_LicenseId);
-        m_Vehicles[i_LicenseId].VehicleState = i_NewState;
+        m_Vehicles[i_LicenseId].VehicleState = iNewState;
     }
 
     public void InflateTires(string i_LicenseId)
@@ -197,4 +197,11 @@ public class GarageLogic
         validateVehicleInGarage(i_LicenseId);
         return m_Vehicles[i_LicenseId].NumberOfTires();
     }
+
+    public void AddSpecificTires(string i_LicenseId, List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
+    {
+        validateVehicleInGarage(i_LicenseId);
+        m_Vehicles[i_LicenseId].AddSpecificTires(i_TireModelNamesAndPressures);
+    }
+
 }

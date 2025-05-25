@@ -121,5 +121,12 @@ public abstract class Vehicle
     public void SetPressureOfSingleTire(int i_Index, float i_AirPressure)
     {
         m_Tires.SetPressureOfSingleTire(i_Index, i_AirPressure);
+        
     }
+
+    public void SetPressureOfAllTires(string i_ModelName, float i_AirPressure)
+    {
+        m_Tires.AddDetailsForAllTires(i_ModelName, i_AirPressure);
+    }
+    
 }

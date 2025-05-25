@@ -22,7 +22,7 @@ public class UserInterface
 4) ElectricMotorcycle
 5) Truck";
 
-    private enum menuOptions
+    private enum eMenuOptions
     {
         LoadVehiclesFromFile = 1,
         AddVehicleToGarage,
@@ -35,6 +35,15 @@ public class UserInterface
         Exit
     }
 
+    public enum eVehicleTypesOptions
+    {
+        FuelCar = 1,
+        ElectricCar,
+        FuelMotorcycle,
+        ElectricMotorcycle,
+        Truck
+    }
+
     private GarageLogic m_GarageLogic;
 
     private bool m_IsRunning = true;
@@ -45,7 +54,6 @@ public class UserInterface
 
     public void GarageMenu()
     {
-        //TODO: create a running loop
         while (m_IsRunning)
         {
             Console.WriteLine("Welcome to the Garage Management System!");
@@ -58,52 +66,59 @@ public class UserInterface
 
     private void handleUserInput(string i_UserInput)
     {
-        Console.Clear();
+        int input;
 
-        if (!int.TryParse(i_UserInput, out int input)) // TODO: move to input validator class and use exception handling
+        try
         {
-            Console.WriteLine("Invalid input. Please enter a number corresponding to the menu options.");
+            input = InputValidator.checkValidInt(i_UserInput);
+        }
+        catch(FormatException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+            Console.Clear();
             return;
         }
 
 
-        menuOptions selectedOption = (menuOptions)input;
+        eMenuOptions selectedOption = (eMenuOptions)input;
 
         switch (selectedOption)
         {
-            case menuOptions.LoadVehiclesFromFile:
+            case eMenuOptions.LoadVehiclesFromFile:
                 loadVehiclesFromFile();
                 break;
 
-            case menuOptions.AddVehicleToGarage:
+            case eMenuOptions.AddVehicleToGarage:
                 addVehicle();
                 break;
 
-            case menuOptions.ShowAllVehiclesInGarage:
-                PrintAllVehiclesInGarage();
+            case eMenuOptions.ShowAllVehiclesInGarage:
+                printAllVehiclesInGarage();
                 break;
 
-            case menuOptions.ChangeVehicleState:
+            case eMenuOptions.ChangeVehicleState:
                 changeCarState();
                 break;
 
-            case menuOptions.InflateTires:
+            case eMenuOptions.InflateTires:
                 inflateTires();
                 break;
 
-            case menuOptions.FuelVehicle:
+            case eMenuOptions.FuelVehicle:
                 fuelVehicle();
                 break;
 
-            case menuOptions.ChargeVehicle:
+            case eMenuOptions.ChargeVehicle:
                 chargeVehicle();
                 break;
 
-            case menuOptions.ShowVehicleDetails:
+            case eMenuOptions.ShowVehicleDetails:
                 showVehicleDetails();
                 break;
 
-            case menuOptions.Exit:
+            case eMenuOptions.Exit:
                 m_IsRunning = false;
                 Console.Clear();
                 Console.WriteLine("Exiting the program. Goodbye!");
@@ -154,31 +169,92 @@ public class UserInterface
         }
     }
 
-    private void getDetailsAndCreateVehicle(string i_LicenseID)
+    private void getDetailsAndCreateVehicle(string i_LicenseId)
     {
         List<string> creationDetails = new List<string>();
-        string vehicleType, modelName;
+        string userInput, modelName;
         
         Console.Clear();
         Console.WriteLine("Vehicle is not in the garage. Please select vehicle type from the following options:");
         Console.WriteLine(k_VehicleOptionsMenu);
         //TODO convert to chosen option
-        vehicleType = Console.ReadLine();
-        vehicleType = "FuelCar";
+        userInput = Console.ReadLine();
+        
+        handleVehicleChoice(userInput, out string vehicleType);
+
+        if(vehicleType.Length == 0)
+        {
+            return;
+        }
+
         Console.WriteLine("Please enter vehicle model name: ");
         modelName = Console.ReadLine();
         creationDetails.Add(vehicleType);
-        creationDetails.Add(i_LicenseID);
+        creationDetails.Add(i_LicenseId);
         creationDetails.Add(modelName);
         m_GarageLogic.CreateVehicle(creationDetails);
     }
 
-    private void getVehicleDetailsAndUpdate(string licenseId)
+    private void handleVehicleChoice(string i_UserInput, out string io_vehicleType)
+    {
+        int input;
+        io_vehicleType = "";
+
+        try
+        {
+            input = InputValidator.checkValidInt(i_UserInput);
+        }
+        catch(FormatException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+            return;
+        }
+
+        if(Enum.IsDefined(typeof(eVehicleTypesOptions), input))
+        {
+            eVehicleTypesOptions selectedOption = (eVehicleTypesOptions)input;
+
+            switch (selectedOption)
+            {
+                case eVehicleTypesOptions.FuelCar:
+                    io_vehicleType  = "FuelCar";
+                    break;
+
+                case eVehicleTypesOptions.ElectricCar:
+                    io_vehicleType = "ElectricCar";
+                    break;
+
+                case eVehicleTypesOptions.FuelMotorcycle:
+                    io_vehicleType = "FuelMotorcycle";
+                    break;
+
+                case eVehicleTypesOptions.ElectricMotorcycle:
+                    io_vehicleType = "ElectricMotorcycle";
+                    break;
+
+                case eVehicleTypesOptions.Truck:
+                    io_vehicleType = "Truck";
+                    break;
+            }
+        }
+
+        else
+        {
+            Console.WriteLine("Invalid vehicle type selected. Please try again.");
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+        }
+
+    }
+
+    private void getVehicleDetailsAndUpdate(string i_LicenseId)
     {
         List<string> updateVehicleDetails = new List<string>();
         string batteryPercentage, fuelPercentage, tireModel;
         
-        if(m_GarageLogic.IsElectric(licenseId))
+        if(m_GarageLogic.IsElectric(i_LicenseId))
         {
             Console.WriteLine("please enter the battery percentage (0-100): ");
             batteryPercentage = Console.ReadLine();
@@ -194,28 +270,38 @@ public class UserInterface
         Console.WriteLine("please enter the tire model: ");
         tireModel = Console.ReadLine();
         updateVehicleDetails.Add(tireModel);
-        setTiresState(licenseId, updateVehicleDetails);
-        setVehicleDetails(licenseId, updateVehicleDetails);
-        m_GarageLogic.UpdateVehicle(licenseId, updateVehicleDetails);
+        setTiresState(i_LicenseId, updateVehicleDetails, tireModel);
+        setVehicleDetails(i_LicenseId, updateVehicleDetails);
+        try
+        {
+            m_GarageLogic.UpdateVehicle(i_LicenseId, updateVehicleDetails);
+        }
+        catch(FormatException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+        }
+        
     }
 
-    private void setVehicleDetails(string i_licenseId, List<string> i_vehicleDetails)
+    private void setVehicleDetails(string i_LicenseId, List<string> i_VehicleDetails)
     {
-        if (m_GarageLogic.IsCar(i_licenseId))
+        if (m_GarageLogic.IsCar(i_LicenseId))
         {
-            addCarDetails(i_vehicleDetails);
+            addCarDetails(i_VehicleDetails);
         }
-        else if (m_GarageLogic.IsMotorcycle(i_licenseId))
+        else if (m_GarageLogic.IsMotorcycle(i_LicenseId))
         {
-            addMotorcycleDetails(i_vehicleDetails);
+            addMotorcycleDetails(i_VehicleDetails);
         }
-        else if (m_GarageLogic.IsTruck(i_licenseId))
+        else if (m_GarageLogic.IsTruck(i_LicenseId))
         {
-            addTruckDetails(i_vehicleDetails);
+            addTruckDetails(i_VehicleDetails);
         }
     }
 
-    private void addCarDetails(List<string> i_vehicleDetails)
+    private void addCarDetails(List<string> i_VehicleDetails)
     {
         Console.WriteLine("Please enter the number of doors from the following: ");
 
@@ -223,10 +309,10 @@ public class UserInterface
         {
             Console.Write($"{dorNum} ");
         }
-
+        Console.WriteLine();
         string doorsInput = Console.ReadLine();
 
-        i_vehicleDetails.Add(doorsInput);
+        i_VehicleDetails.Add(doorsInput);
         Console.WriteLine("Please enter the color from the following: ");
 
         foreach (Car.eColor color in Enum.GetValues(typeof(Car.eColor)))
@@ -235,45 +321,118 @@ public class UserInterface
         }
 
         string colorInput = Console.ReadLine();
-        i_vehicleDetails.Add(colorInput);
+        i_VehicleDetails.Add(colorInput);
     }
 
-    private void addMotorcycleDetails(List<string> i_vehicleDetails)
+    private void addMotorcycleDetails(List<string> i_VehicleDetails)
     {
         Console.WriteLine("Please enter the motorcycle license type from the following: ");
         foreach (Motorcycle.eLicenseType licenseType in Enum.GetValues(typeof(Motorcycle.eLicenseType)))
         {
             Console.Write($"{licenseType} ");
         }
+        Console.WriteLine();
         string licenseTypeInput = Console.ReadLine();
-        i_vehicleDetails.Add(licenseTypeInput);
+        i_VehicleDetails.Add(licenseTypeInput);
 
         Console.WriteLine("Please enter the motorcycle engine size: ");
         string engineSizeInput = Console.ReadLine();
-        i_vehicleDetails.Add(engineSizeInput);
+        i_VehicleDetails.Add(engineSizeInput);
     }
 
-    private void addTruckDetails(List<string> i_vehicleDetails)
+    private void addTruckDetails(List<string> i_VehicleDetails)
     {
         Console.WriteLine("Please enter the truck cargo capacity: ");
         string cargoCapacityInput = Console.ReadLine();
-        i_vehicleDetails.Add(cargoCapacityInput);
+        i_VehicleDetails.Add(cargoCapacityInput);
 
         Console.WriteLine("Is the truck dangerous? (true/false): ");
         string isDangerousInput = Console.ReadLine();
-        i_vehicleDetails.Add(isDangerousInput);
+        i_VehicleDetails.Add(isDangerousInput);
     }
 
-    private void setTiresState(string i_licenseId, List<string> i_vehicleDetails)
+    private void setTiresState(string i_LicenseId, List<string> i_VehicleDetails, string i_TireModel)
     {
-        //TODO: add logic to set tires state in the details string array
-        //functions u can use:
-        //1) public void AddSpecificTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
-        //      input: list of pairs: modelName and currentPressure. 
-        //      throws 2 exceptions: 1) wrong number of tires 2) wrong current pressure (more than max or less than 0)
-        //2) public void AddDetailsForAllTires(string i_TireModelName, float i_CurrentAirPressure)
-        //      input: modelName and currentPressure. 
-        //      throws only wrong current pressure
+        bool allTiresAtOnce = false;
+        Console.WriteLine("Do you want to set the tire details for all the tires at once? press y , otherwise any key");
+        string? userInput = Console.ReadLine();
+
+        if (userInput?.ToLower() == "y")
+        {
+            allTiresAtOnce = true;
+        }
+
+        if(allTiresAtOnce)
+        {
+            setAllTiresAtOnce(i_LicenseId, i_VehicleDetails);
+        }
+
+        else
+        {
+            setTiresStateIndividually(i_LicenseId, i_TireModel);
+        }
+    }
+
+    private void setTiresStateIndividually(string i_LicenseId, string i_ModelName)
+    {
+        List<KeyValuePair<string, float>> tireDetails = new List<KeyValuePair<string, float>>();
+        int numberOfTires = m_GarageLogic.GetNumberOfTires(i_LicenseId);
+        for(int i = 0; i < numberOfTires; i++)
+        {
+            Console.WriteLine($"Please enter the current air pressure for tire {i + 1}: ");
+            string currentAirPressureInput = Console.ReadLine();
+
+            try
+            {
+                float currentAirPressure = InputValidator.checkValidFloat(currentAirPressureInput);
+                tireDetails.Add(new KeyValuePair<string, float>(i_ModelName, currentAirPressure));
+            }
+            catch(FormatException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Press any key to return to menu");
+                Console.ReadLine();
+                return;
+            }
+        }
+
+        try
+        {
+            m_GarageLogic.AddSpecificTires(i_LicenseId,tireDetails);
+        }
+        catch (ValueRangeException vre)
+        {
+            Console.WriteLine(vre.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+        }
+        catch (ArgumentException ae)
+        {
+            Console.WriteLine(ae.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+        }
+    }
+
+    private void setAllTiresAtOnce(string i_LicenseId, List<string> i_VehicleDetails)
+    {
+        Console.WriteLine("Please enter the current air pressure: ");
+        string currentAirPressureInput = Console.ReadLine();
+        float currentAirPressure;
+
+        try
+        {
+            currentAirPressure = InputValidator.checkValidFloat(currentAirPressureInput);
+        }
+        catch (FormatException e)
+        {
+            Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+            return;
+        }
+
+        i_VehicleDetails.Add(currentAirPressure.ToString());
     }
 
     private void loadVehiclesFromFile()
@@ -289,7 +448,7 @@ public class UserInterface
         }
     }
 
-    private void PrintAllVehiclesInGarage()
+    private void printAllVehiclesInGarage()
     {
         Console.WriteLine("What state do you want to show? chose from the following: press any other key if all ");
 

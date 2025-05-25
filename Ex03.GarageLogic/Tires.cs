@@ -72,8 +72,7 @@ public class Tires
         }
         else
         {
-            throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure);
-            //TODO: how to add message
+            throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure, "Pressure outside of range");
         }
     }
 
@@ -96,8 +95,7 @@ public class Tires
             }
             else
             {
-                throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure);
-                //TODO: how to add message
+                throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure, "Pressure outside of range");
             }
         }
     }
