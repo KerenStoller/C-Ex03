@@ -270,11 +270,12 @@ public class UserInterface
         Console.WriteLine("please enter the tire model: ");
         tireModel = Console.ReadLine();
         updateVehicleDetails.Add(tireModel);
-        setTiresState(i_LicenseId, updateVehicleDetails, tireModel);
+        //TODO added this bool return:
+        bool areAllTiresTheSame = setTiresState(i_LicenseId, updateVehicleDetails, tireModel);
         setVehicleDetails(i_LicenseId, updateVehicleDetails);
         try
         {
-            m_GarageLogic.UpdateVehicle(i_LicenseId, updateVehicleDetails);
+            m_GarageLogic.UpdateVehicle(i_LicenseId, updateVehicleDetails, areAllTiresTheSame);
         }
         catch(FormatException e)
         {
@@ -351,26 +352,28 @@ public class UserInterface
         i_VehicleDetails.Add(isDangerousInput);
     }
 
-    private void setTiresState(string i_LicenseId, List<string> i_VehicleDetails, string i_TireModel)
+    private bool setTiresState(string i_LicenseId, List<string> i_VehicleDetails, string i_TireModel)
     {
-        bool allTiresAtOnce = false;
+        bool areAllTiresTheSame = false;
         Console.WriteLine("Do you want to set the tire details for all the tires at once? press y , otherwise any key");
         string? userInput = Console.ReadLine();
 
         if (userInput?.ToLower() == "y")
         {
-            allTiresAtOnce = true;
+            areAllTiresTheSame = true;
         }
 
-        if(allTiresAtOnce)
+        if(areAllTiresTheSame)
         {
             setAllTiresAtOnce(i_LicenseId, i_VehicleDetails);
         }
-
         else
         {
+            //TODO write the details on i_VehicleDetails
             setTiresStateIndividually(i_LicenseId, i_TireModel);
         }
+        
+        return areAllTiresTheSame;
     }
 
     private void setTiresStateIndividually(string i_LicenseId, string i_ModelName)
