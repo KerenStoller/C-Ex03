@@ -1,3 +1,9 @@
+//TODO: 1) add done task messages to the user
+//2) filter vehicles by state
+//3) print nicer
+
+
+
 using Ex03.GarageLogic.EnergySystem;
 
 namespace Ex03.ConsoleUI;
@@ -129,8 +135,8 @@ public class UserInterface
                 Console.ReadLine();
                 break;
         }
-        Console.WriteLine("Press any key to return to menu");
-        Console.ReadLine();
+        // Console.WriteLine("Press any key to return to menu");
+        // Console.ReadLine();
         Console.Clear();
     }
 
@@ -168,7 +174,6 @@ public class UserInterface
         Console.Clear();
         Console.WriteLine("Vehicle is not in the garage. Please select vehicle type from the following options:");
         Console.WriteLine(k_VehicleOptionsMenu);
-        //TODO convert to chosen option
         userInput = Console.ReadLine();
         
         handleVehicleChoice(userInput, out string vehicleType);
@@ -268,11 +273,8 @@ public class UserInterface
             fuelPercentage = Console.ReadLine();
             updateVehicleDetails.Add(fuelPercentage);
         }
-
-        Console.WriteLine("please enter the tire model: ");
-        tireModel = Console.ReadLine();
-        updateVehicleDetails.Add(tireModel);
-        setTiresState(i_LicenseId, updateVehicleDetails, tireModel);
+        
+        setTiresState(i_LicenseId, updateVehicleDetails, out bool allTiresAtOnce);
 
         Console.WriteLine("Please enter the owner name: ");
         string ownerName = Console.ReadLine();
@@ -293,12 +295,12 @@ public class UserInterface
             Console.ReadLine();
             returnToMenu = true;
         }
-
         catch(ArgumentException e)
         {
             Console.WriteLine(e.Message);
             Console.WriteLine("Press any key to return to menu");
             Console.ReadLine();
+            returnToMenu = true;
         }
 
         if(returnToMenu)
@@ -310,7 +312,7 @@ public class UserInterface
 
         try
         {
-            m_GarageLogic.UpdateVehicle(i_LicenseId, updateVehicleDetails);
+            m_GarageLogic.UpdateVehicle(i_LicenseId, updateVehicleDetails, allTiresAtOnce);
         }
         catch(FormatException e)
         {
@@ -389,34 +391,37 @@ public class UserInterface
         i_VehicleDetails.Add(isDangerousInput);
     }
 
-    private void setTiresState(string i_LicenseId, List<string> i_VehicleDetails, string i_TireModel)
-    {
-        bool allTiresAtOnce = false;
+    private void setTiresState(string i_LicenseId, List<string> i_VehicleDetails, out bool io_allTiresAtOnce)
+    { 
+        io_allTiresAtOnce = false;
         Console.WriteLine("Do you want to set the tire details for all the tires at once? press y , otherwise any key");
         string? userInput = Console.ReadLine();
 
         if (userInput?.ToLower() == "y")
         {
-            allTiresAtOnce = true;
+            io_allTiresAtOnce = true;
         }
 
-        if(allTiresAtOnce)
+        if(io_allTiresAtOnce)
         {
             setAllTiresAtOnce(i_LicenseId, i_VehicleDetails);
         }
 
         else
         {
-            setTiresStateIndividually(i_LicenseId, i_TireModel);
+            setTiresStateIndividually(i_LicenseId, i_VehicleDetails);
         }
     }
 
-    private void setTiresStateIndividually(string i_LicenseId, string i_ModelName)
+    private void setTiresStateIndividually(string i_LicenseId, List<string> i_VehicleDetails)
     {
         List<KeyValuePair<string, float>> tireDetails = new List<KeyValuePair<string, float>>();
         int numberOfTires = m_GarageLogic.GetNumberOfTires(i_LicenseId);
         for(int i = 0; i < numberOfTires; i++)
         {
+            Console.WriteLine($"Please enter the tire model for tire {i + 1}: ");
+            string i_ModelName = Console.ReadLine();
+            
             Console.WriteLine($"Please enter the current air pressure for tire {i + 1}: ");
             string currentAirPressureInput = Console.ReadLine();
 
@@ -433,28 +438,19 @@ public class UserInterface
                 return;
             }
         }
-
-        try
+        foreach (KeyValuePair<string, float> modelAndTire in tireDetails)
         {
-            m_GarageLogic.AddSpecificTires(i_LicenseId,tireDetails);
-        }
-        catch (ValueRangeException vre)
-        {
-            Console.WriteLine(vre.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
-        }
-        catch (ArgumentException ae)
-        {
-            Console.WriteLine(ae.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
+            i_VehicleDetails.Add(modelAndTire.Key);
+            i_VehicleDetails.Add(modelAndTire.Value.ToString());
         }
     }
 
     private void setAllTiresAtOnce(string i_LicenseId, List<string> i_VehicleDetails)
     {
+        Console.WriteLine("Please enter the tire model: ");
+        string tireModel = Console.ReadLine();
         Console.WriteLine("Please enter the current air pressure: ");
+        
         string currentAirPressureInput = Console.ReadLine();
         float currentAirPressure;
 
@@ -469,7 +465,8 @@ public class UserInterface
             Console.ReadLine();
             return;
         }
-
+        
+        i_VehicleDetails.Add(tireModel);
         i_VehicleDetails.Add(currentAirPressure.ToString());
     }
 
@@ -479,10 +476,14 @@ public class UserInterface
         {
             m_GarageLogic.AddVehiclesFromDb();
             Console.WriteLine("Vehicles loaded from file.");
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
         }
         catch(Exception e)
         {
             Console.WriteLine(e.Message);
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
         }
     }
 
@@ -506,6 +507,10 @@ public class UserInterface
         {
             Console.WriteLine(reg);
         }
+        
+        Console.WriteLine("Press any key to return to menu");
+        Console.ReadLine();
+        Console.Clear();
     }
 
     private void changeCarState()
@@ -609,30 +614,28 @@ public class UserInterface
 
     private void showVehicleDetails()
     {
+        
+        // todo: make it better
         Console.WriteLine("Please enter your vehicle registration number: ");
         string licenseId = Console.ReadLine();
         try
         {
             List<string> details = m_GarageLogic.GetDetails(licenseId);
-            Console.WriteLine("=========================================");
-            Console.WriteLine("         Vehicle Details Summary         ");
-            Console.WriteLine("=========================================");
+            Console.WriteLine("Vehicle Details:");
             foreach (string detail in details)
             {
-                // Try to split on ':' for key-value formatting
                 int separatorIndex = detail.IndexOf(':');
                 if (separatorIndex > 0 && separatorIndex < detail.Length - 1)
                 {
                     string key = detail.Substring(0, separatorIndex).Trim();
                     string value = detail.Substring(separatorIndex + 1).Trim();
-                    Console.WriteLine($"{key,-25}: {value}");
+                    Console.WriteLine($"Detail: {key} | Value: {value}");
                 }
                 else
                 {
-                    Console.WriteLine(detail);
+                    Console.WriteLine($"Detail: {detail}");
                 }
             }
-            Console.WriteLine("=========================================");
         }
         catch (ArgumentException e)
         {
