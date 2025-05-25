@@ -370,7 +370,7 @@ class GarageLogicUIBridge
     private void setTiresState(string i_LicenseId, List<string> i_VehicleDetails, out bool io_allTiresAtOnce)
     {
         io_allTiresAtOnce = false;
-        Console.WriteLine("Do you want to set the tire details for all the tires at once? press y , otherwise any key");
+        Console.WriteLine("Do you want to set the tire details for all the tires at once? press y, otherwise any key");
         string? userInput = Console.ReadLine();
 
         if (userInput?.ToLower() == "y")
@@ -400,7 +400,7 @@ class GarageLogicUIBridge
             Console.WriteLine($"Please enter the tire model for tire {i + 1}: ");
             string i_ModelName = Console.ReadLine();
 
-            Console.WriteLine($"Please enter the current air pressure for tire {i + 1}: ");
+            Console.WriteLine($"Please enter the current air pressure for tire {i + 1}:");
             string currentAirPressureInput = Console.ReadLine();
 
             try

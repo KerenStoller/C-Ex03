@@ -1,12 +1,7 @@
 
-
-
-
-using Ex03.GarageLogic.EnergySystem;
-
 namespace Ex03.ConsoleUI;
 
-using Ex03.GarageLogic;
+using GarageLogic;
 
 public class UserInterface
 {
@@ -176,25 +171,30 @@ public class UserInterface
 
     private void printAllVehiclesInGarage()
     {
-        Console.WriteLine("What state do you want to show? chose from the following: press any other key if all ");
-
-        //TODO:
-        //PrintAllVehiclesInGarage();
+        Console.WriteLine("Select vehicle state to filter by:");
+        foreach (string state in Enum.GetNames(typeof(Vehicle.eVehicleState)))
+        {
+            Console.WriteLine($"- {state}");
+        }
+        Console.WriteLine("Or press Enter to show all vehicles.");
 
         string? userInput = Console.ReadLine();
+        string? filterState = string.IsNullOrWhiteSpace(userInput) ? null : userInput;
 
-        List<string> vehicles = m_GarageLogic.GetLicenseIdOfAllVehiclesInGarage(userInput);
+        List<string> vehicles = m_GarageLogic.GetLicenseIdOfAllVehiclesInGarage(filterState);
 
-        if(vehicles.Count == 0)
+        if (vehicles.Count == 0)
         {
-            Console.WriteLine("There are no vehicles in garage.");    
+            Console.WriteLine("There are no vehicles in garage for the selected state.");
         }
-        
-        foreach (string reg in vehicles)
+        else
         {
-            Console.WriteLine(reg);
+            foreach (string reg in vehicles)
+            {
+                Console.WriteLine(reg);
+            }
         }
-        
+
         Console.WriteLine("Press any key to return to menu");
         Console.ReadLine();
         Console.Clear();

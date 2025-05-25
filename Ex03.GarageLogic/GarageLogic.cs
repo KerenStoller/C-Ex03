@@ -219,11 +219,4 @@ public class GarageLogic
         validateVehicleInGarage(i_LicenseId);
         return m_Vehicles[i_LicenseId].NumberOfTires();
     }
-
-    public void AddSpecificTires(string i_LicenseId, List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
-    {
-        validateVehicleInGarage(i_LicenseId);
-        m_Vehicles[i_LicenseId].AddSpecificTires(i_TireModelNamesAndPressures);
-    }
-
 }
