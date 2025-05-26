@@ -55,7 +55,6 @@ internal class ElectricCar : Car
     {
         m_EnergySystem = new Battery(k_MaxBatterCapacityHours);
     }
-    
 }
 
 internal class FuelCar : Car
