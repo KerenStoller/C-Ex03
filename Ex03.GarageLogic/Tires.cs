@@ -35,12 +35,9 @@ public class Tires
                 r_MaxAirPressure : CurrAirPressure + i_PressurToAdd;  
         }
 
-        public List<string> GetDetails()
+        public string GetDetails()
         {
-            List<string> details = new List<string>();
-            details.Add(CurrAirPressure.ToString());
-            details.Add(ModelName);
-            return details;
+            return $"{ModelName} - {CurrAirPressure} psi";
         }
     }
     
@@ -108,15 +105,16 @@ public class Tires
         }
     }
 
-    public List<string> GetDetails()
+    public Dictionary<string, string> GetDetails()
     {
-        List<string> details = new List<string>();
+        Dictionary<string, string> details = new Dictionary<string, string>();
+        
+        int tireIndex = 1;
         
         foreach (Tire tire in m_Tires)
         {
-            details.AddRange(tire.GetDetails());
+            details.Add($"Tire {tireIndex++} ", tire.GetDetails());
         }
-        
         return details;
     }
     

@@ -174,7 +174,7 @@ public class GarageLogic
         m_Vehicles[i_LicenseId].ChargeBattery(i_TimeToChargeInMinutes);
     }
 
-    public List<string> GetDetails(string i_LicenseId)
+    public Dictionary<string, string> GetDetails(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);
         return m_Vehicles[i_LicenseId].GetDetails();
@@ -208,5 +208,11 @@ public class GarageLogic
     {
         validateVehicleInGarage(i_LicenseId);
         return m_Vehicles[i_LicenseId].NumberOfTires();
+    }
+    
+    public float getMaxAirPressure(string i_LicenseId)
+    {
+        validateVehicleInGarage(i_LicenseId);
+        return m_Vehicles[i_LicenseId].GetMaxAirPressure();
     }
 }

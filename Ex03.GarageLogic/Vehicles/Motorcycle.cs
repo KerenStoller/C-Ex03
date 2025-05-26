@@ -18,11 +18,11 @@ public abstract class Motorcycle : Vehicle
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
     
-    public override List<string> GetDetails()
+    public override Dictionary<string, string> GetDetails()
     {
-        List<string> details = GetGeneralVehicleDetails();
-        details.Add(LicenseType.ToString());
-        details.Add(EngineCapacity.ToString());
+        Dictionary<string, string> details = GetGeneralVehicleDetails();
+        details.Add("License Type", LicenseType.ToString());
+        details.Add("Engine Capacity", EngineCapacity.ToString());
         return details;
     }
     
@@ -37,6 +37,11 @@ public abstract class Motorcycle : Vehicle
         {
             throw new FormatException(e.Message);
         }
+    }
+
+    public override float GetMaxAirPressure()
+    {
+        return k_MaxTireAirPressure;
     }
 }
 

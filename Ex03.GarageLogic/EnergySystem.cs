@@ -9,7 +9,7 @@ public abstract class EnergySystem
     protected float EnergyPercentage { get; set; }
     public abstract bool IsElectric { get; }
     
-    public abstract List<string> GetDetails();
+    public abstract string GetDetails();
     
     public void RefillEnergy(float i_EnergyToAdd)
     {
@@ -36,13 +36,9 @@ public abstract class EnergySystem
         CurrentEnergyAmount = r_MaxEnergyCapacity;
     }
 
-    protected List<string> GetGeneralDetails()
+    protected string GetGeneralDetails()
     {
-        List<string> details = new List<string>();
-        details.Add(EnergyPercentage.ToString());
-        details.Add(CurrentEnergyAmount.ToString());
-        details.Add(r_MaxEnergyCapacity.ToString());
-        return details;
+        return $"\n Energy Percentage: {EnergyPercentage}%\n Current Energy Amount: {CurrentEnergyAmount}\n Max Energy Capacity: {r_MaxEnergyCapacity}";
     }
 }
 
@@ -51,7 +47,7 @@ public class Battery : EnergySystem
     public override bool IsElectric => true;
     public Battery(float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity) {}
 
-    public override List<string> GetDetails()
+    public override string GetDetails()
     {
         return GetGeneralDetails();
     }
@@ -78,10 +74,9 @@ public class FuelSystem : EnergySystem
         return r_MFuelType;
     }
 
-    public override List<string> GetDetails()
+    public override string GetDetails()
     {
-        List<string> details = GetGeneralDetails();
-        details.Add(r_MFuelType.ToString());
+        string details = $"{GetGeneralDetails()}\nFuel Type: {r_MFuelType}";
         return details;
     }
 }
