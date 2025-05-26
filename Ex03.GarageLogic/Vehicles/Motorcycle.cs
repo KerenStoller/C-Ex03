@@ -19,6 +19,7 @@ internal abstract class Motorcycle : Vehicle
     internal override Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = GetGeneralVehicleDetails();
+        
         details.Add("License Type", LicenseType.ToString());
         details.Add("Engine Capacity", EngineCapacity.ToString());
         return details;

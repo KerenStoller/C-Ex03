@@ -1,6 +1,6 @@
 namespace Ex03.GarageLogic;
 
-internal abstract class EnergySystem
+public abstract class EnergySystem
 {
     private const float k_MaxPercentage = 100;
     private const float k_MinPercentage = 0;
@@ -27,7 +27,8 @@ internal abstract class EnergySystem
         }
         else
         {
-            throw new ValueRangeException(i_EnergyPercentage, k_MinPercentage, "Energy percentage outside of range");
+            throw new ValueRangeException
+                (i_EnergyPercentage, k_MinPercentage, "Energy percentage outside of range");
         }
     }
     
@@ -39,13 +40,18 @@ internal abstract class EnergySystem
 
     protected string GetGeneralDetails()
     {
-        return $"\n Energy Percentage: {EnergyPercentage}%\n Current Energy Amount: {CurrentEnergyAmount}\n Max Energy Capacity: {r_MaxEnergyCapacity}";
+        return $"\nEnergy Percentage: {EnergyPercentage}%" +
+               $"\nCurrent Energy Amount: {CurrentEnergyAmount}" +
+               $"\nMax Energy Capacity: {r_MaxEnergyCapacity}";
     }
 }
 
 internal class Battery : EnergySystem
 {
-    internal override bool IsElectric => true;
+    internal override bool IsElectric
+    {
+        get { return true; }
+    }
     internal Battery(float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity) {}
 
     internal override string GetDetails()
@@ -63,7 +69,10 @@ internal class FuelSystem : EnergySystem
 
     private readonly eFuelType r_MFuelType;
     
-    internal override bool IsElectric => false;
+    internal override bool IsElectric
+    {
+        get { return false; }
+    }
 
     internal FuelSystem(eFuelType i_FuelType,  float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity)
     {

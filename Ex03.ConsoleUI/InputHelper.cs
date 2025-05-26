@@ -13,6 +13,7 @@ public static class InputHelper
             "Show vehicle details",
             "Exit"
         };
+    private const int k_LengthOfPhoneNumber = 10;
 
     public static string GetLicenseId()
     {
@@ -49,46 +50,47 @@ public static class InputHelper
         return result;
     }
     
-    private static void printErrorAndTryAgain(string message)
+    private static void printErrorAndTryAgain(string i_Message)
     {
-        Console.WriteLine(message);
+        Console.WriteLine(i_Message);
         Console.WriteLine("Press any key to try again");
         Console.ReadLine();
         Console.Clear();
     }
     
-    public static string GetEnumInString(string enumType, List<string> options, bool i_AllowNone = false) 
+    public static string GetEnumInString(string i_EnumType, List<string> i_Options, bool i_AllowNone = false) 
     {
         string returnString = "";
+        
         while (true)
         {
-            Console.WriteLine($"Please choose the {enumType} from the following:");
-            for (int i = 0; i < options.Count; i++)
+            Console.WriteLine($"Please choose the {i_EnumType} from the following:");
+            for (int i = 0; i < i_Options.Count; i++)
             {
-                Console.WriteLine($"{i + 1}) {options[i]}");
+                Console.WriteLine($"{i + 1}) {i_Options[i]}");
             }
         
             Console.WriteLine();
             string? input = Console.ReadLine();
-            bool foundOption = false;
+            bool resultIsEnum = false;
             
-            if (int.TryParse(input, out int index) && index >= 1 && index <= options.Count)
+            if (int.TryParse(input, out int index) && index >= 1 && index <= i_Options.Count)
             {
                 Console.Clear();
-                returnString = options[index - 1];
+                returnString = i_Options[index - 1];
             }
             else
             {
-                foreach (string option in options)
+                foreach (string option in i_Options)
                 {
                     if (input.ToLower() == option.ToLower())
                     {
                         returnString = option;
-                        foundOption = true;
+                        resultIsEnum = true;
                         break;
                     }
                 }
-                if (i_AllowNone && !foundOption)
+                if (i_AllowNone && !resultIsEnum)
                 {
                     Console.WriteLine("Invalid choice. Showing all instead.");
                     returnString = "";
@@ -125,14 +127,14 @@ public static class InputHelper
         }
     }
     
-    public static void CheckValidPhoneNumber(string inputToCheck)
+    public static void CheckValidPhoneNumber(string i_InputToCheck)
     {
-        if(inputToCheck.Length != 10)
+        if(i_InputToCheck.Length != k_LengthOfPhoneNumber)
         {
             throw new ArgumentException("Phone number must be 10 digits");
         }
 
-        if (!int.TryParse(inputToCheck, out int number))
+        if (!int.TryParse(i_InputToCheck, out int number))
         {
             throw new FormatException("Phone number must contain only digits");
         }
@@ -143,43 +145,55 @@ public static class InputHelper
         Console.WriteLine(i_Question);
         Console.WriteLine("Please enter yes or no:");
 
-        while (true)
+        bool typedYesOrNo = false;
+        bool returnValue = false;
+
+        while (!typedYesOrNo)
         {
             string? input = Console.ReadLine()?.Trim().ToLower();
 
             if (input == "yes" || input == "y")
-                return true;
-
-            if (input == "no" || input == "n")
-                return false;
-
-            Console.WriteLine("Invalid input. Please type 'yes' or 'no'.");
+            {
+                returnValue = true;
+                typedYesOrNo = true;
+            }
+            else if (input == "no" || input == "n")
+            {
+                typedYesOrNo = false;
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter yes or no:");
+            }
         }
+        
+        return returnValue;
     }
 
-    public static string GetEnumInStringOrNone(string enumType, List<string> options , bool i_AllowNone = false)
+    public static string GetEnumInStringOrNone(string i_EnumType, List<string> i_Options , bool i_AllowNone = false)
     {
         string returnString = "";
+        
         while (true)
         {
-            Console.WriteLine($"Please choose the {enumType} from the following:");
-            for (int i = 0; i < options.Count; i++)
+            Console.WriteLine($"Please choose the {i_EnumType} from the following:");
+            for (int i = 0; i < i_Options.Count; i++)
             {
-                Console.WriteLine($"{i + 1}) {options[i]}");
+                Console.WriteLine($"{i + 1}) {i_Options[i]}");
             }
         
             Console.WriteLine();
             string? input = Console.ReadLine();
             bool foundOption = false;
             
-            if (int.TryParse(input, out int index) && index >= 1 && index <= options.Count)
+            if (int.TryParse(input, out int index) && index >= 1 && index <= i_Options.Count)
             {
                 Console.Clear();
-                returnString = options[index - 1];
+                returnString = i_Options[index - 1];
             }
             else
             {
-                foreach (string option in options)
+                foreach (string option in i_Options)
                 {
                     if (input.ToLower() == option.ToLower())
                     {
@@ -194,7 +208,6 @@ public static class InputHelper
                     returnString = "";
                 }
             }
-
             
             if (!i_AllowNone && returnString == "")
             {

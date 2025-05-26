@@ -37,6 +37,7 @@ public class GarageLogic
         
         string modelName = i_DetailsAboutVehicle[2];
         vehicle = VehicleCreator.CreateVehicle(vehicleType, licenseId, modelName);
+        
         m_Vehicles.Add(licenseId, vehicle);
     }
 
@@ -157,6 +158,7 @@ public class GarageLogic
         else
         {
             Vehicle.eVehicleState filterState = Vehicle.validateState(i_FilterByState);
+            
             foreach (KeyValuePair<string, Vehicle> pair in m_Vehicles)
             {
                 if (pair.Value.VehicleState == filterState)
@@ -232,6 +234,7 @@ public class GarageLogic
     public static List<string> GetEnumOptions(eEnumOptions i_EnumOption)
     {
         List<string> listToReturn = new List<string>();
+        
         switch (i_EnumOption)
         {
             case eEnumOptions.CarColor:

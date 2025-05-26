@@ -1,6 +1,6 @@
 namespace Ex03.GarageLogic;
 
-internal abstract class Vehicle
+public abstract class Vehicle
 {
     internal enum eVehicleState
     {
@@ -129,12 +129,12 @@ internal abstract class Vehicle
     protected Dictionary<string, string> GetGeneralVehicleDetails()
     {
         Dictionary<string, string> details = new Dictionary<string, string>();
+        
         details.Add("License ID", r_LicenseId);
         details.Add("Model Name", r_ModelName);
         details.Add("Owner Name", m_OwnerName);
         details.Add("Owner Phone Number", m_OwnerPhoneNumber);
         details.Add("Vehicle State", VehicleState.ToString());
-        
         foreach (KeyValuePair<string, string> tireDetails in m_Tires.GetDetails())
         {
             details.Add(tireDetails.Key, tireDetails.Value);
@@ -147,7 +147,6 @@ internal abstract class Vehicle
     internal void SetPressureOfSingleTire(int i_Index, float i_AirPressure)
     {
         m_Tires.SetPressureOfSingleTire(i_Index, i_AirPressure);
-        
     }
 
     internal void SetPressureOfAllTires(string i_ModelName, float i_AirPressure)

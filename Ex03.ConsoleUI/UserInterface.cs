@@ -62,6 +62,7 @@ public class UserInterface
         else if (menuOption == InputHelper.k_MenuOptions[8])
         {
             m_UserDidntPressExit = false;
+            
             Console.Clear();
             Console.WriteLine("Exiting the program. Goodbye!");
             return;
@@ -69,9 +70,9 @@ public class UserInterface
         Console.Clear();
     }
     
-    private static void printMessageAndGoBackToMenu(string message)
+    private static void printMessageAndGoBackToMenu(string i_Message)
     {
-        Console.WriteLine(message);
+        Console.WriteLine(i_Message);
         Console.WriteLine("Press any key to return to menu.");
         Console.ReadLine();
         Console.Clear();
@@ -101,6 +102,7 @@ public class UserInterface
     private void ChargeVehicle()
     {
         string licenseId = InputHelper.GetLicenseId();
+        
         Console.WriteLine("Please enter the amount of time to charge (in minutes): ");
         float timeToCharge = InputHelper.GetNonNegativeFloat();
 
@@ -120,7 +122,9 @@ public class UserInterface
     private void FuelVehicle()
     {
         string licenseId = InputHelper.GetLicenseId();
-        string fuelType = InputHelper.GetEnumInString("type of fuel", GarageLogic.GetEnumOptions(EnumOptions.FuelType));
+        string fuelType = InputHelper.GetEnumInString("type of fuel", 
+            GarageLogic.GetEnumOptions(EnumOptions.FuelType));
+        
         Console.WriteLine("Please enter the amount of fuel to add: ");
         float fuelAmount = InputHelper.GetNonNegativeFloat();
 
@@ -157,7 +161,7 @@ public class UserInterface
     {
         string licenseId = InputHelper.GetLicenseId();
         string vehicleState = InputHelper.GetEnumInString("new state of the vehicle", GarageLogic.GetEnumOptions
-            (GarageLogic.eEnumOptions.VehicleState));
+            (EnumOptions.VehicleState));
 
         try
         {
@@ -199,7 +203,8 @@ public class UserInterface
         try
         {
             vehicleDetails = m_GarageLogic.GetDetails(licenseId);
-            Console.WriteLine("Vehicle details: ");
+            Console.Clear();
+            Console.WriteLine("Vehicle details: \n");
             foreach (KeyValuePair<string, string> detail in vehicleDetails)
             {
                 Console.WriteLine($"{detail.Key}: {detail.Value} ");
@@ -213,46 +218,52 @@ public class UserInterface
         }
     }
     
-    private void addEnumValueToDetails(string description, EnumOptions optionsType, List<string> detailsList)
+    private void addEnumValueToDetails(string i_Description, EnumOptions i_OptionsType, List<string> i_DetailsList)
     {
-        string value = InputHelper.GetEnumInString(description, GarageLogic.GetEnumOptions(optionsType));
-        detailsList.Add(value);
+        string value = InputHelper.GetEnumInString(i_Description, GarageLogic.GetEnumOptions(i_OptionsType));
+        
+        i_DetailsList.Add(value);
         Console.WriteLine();
     }
 
-    private void addStringToDetails(string description, List<string> detailsList)
+    private void addStringToDetails(string i_Description, List<string> i_DetailsList)
     {
-        Console.WriteLine("Please enter the " + description + ": ");
+        Console.WriteLine("Please enter the " + i_Description + ": ");
         string value = Console.ReadLine();
-        detailsList.Add(value);
+        
+        i_DetailsList.Add(value);
         Console.WriteLine();
     }
 
-    private void addNonNegativeFloatToDetails(string description, List<string> detailsList)
+    private void addNonNegativeFloatToDetails(string i_Description, List<string> i_DetailsList)
     {
-        Console.WriteLine("Please enter " + description + ": ");
+        Console.WriteLine("Please enter " + i_Description + ": ");
         string value = InputHelper.GetNonNegativeFloat().ToString();
-        detailsList.Add(value);
+        
+        i_DetailsList.Add(value);
         Console.WriteLine();
     }
 
-    private void addBoolToDetails(string question, List<string> detailsList)
+    private void addBoolToDetails(string i_Question, List<string> i_DetailsList)
     {
-        string isDangerousInput = InputHelper.GetYesOrNo(question).ToString();
-        detailsList.Add(isDangerousInput);
+        string isDangerousInput = InputHelper.GetYesOrNo(i_Question).ToString();
+        
+        i_DetailsList.Add(isDangerousInput);
         Console.WriteLine();
     }
 
-    private void addPhoneNumberToDetails(List<string> detailsList)
+    private void addPhoneNumberToDetails(List<string> i_DetailsList)
     {
         string ownerPhone = InputHelper.GetPhoneNumber();
-        detailsList.Add(ownerPhone);
+        
+        i_DetailsList.Add(ownerPhone);
         Console.WriteLine();
     }
     
     private void getDetailsAndCreateVehicle(string i_LicenseId)
     {
         List<string> creationDetails = new List<string>();
+        
         addEnumValueToDetails("vehicle type", EnumOptions.SupportedTypes, creationDetails);
         creationDetails.Add(i_LicenseId);
         addStringToDetails("vehicle model name", creationDetails);
@@ -274,6 +285,7 @@ public class UserInterface
         }
 
         bool allTiresAtOnce = setTiresState(i_LicenseId, updateVehicleDetails);
+        
         addStringToDetails("owner name", updateVehicleDetails);
         addPhoneNumberToDetails(updateVehicleDetails);
         addSpecificVehicleDetails(i_LicenseId, updateVehicleDetails);

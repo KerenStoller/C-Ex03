@@ -18,6 +18,7 @@ internal class Truck : Vehicle
     internal override Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = GetGeneralVehicleDetails();
+        
         details.Add("Contains Dangerous Materials", ContainsDangerousMaterials.ToString());
         details.Add("Cargo Volume", CargoVolume.ToString());
         return details;

@@ -23,6 +23,7 @@ internal abstract class Car : Vehicle
     internal override Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = GetGeneralVehicleDetails();
+        
         details.Add("Color", Color.ToString());
         details.Add("Number of Doors", NumberOfDoors.ToString());
         return details;

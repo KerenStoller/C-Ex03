@@ -19,8 +19,8 @@ internal class GarageDb
         {
             try
             {
-                string[] allLines = File.ReadAllLines(k_FileName);
                 List<string> lineFromFile;
+                string[] allLines = File.ReadAllLines(k_FileName);
 
                 for (int i = 0; i < allLines.Length; i++)
                 {

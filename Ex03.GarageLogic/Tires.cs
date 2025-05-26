@@ -1,6 +1,6 @@
 namespace Ex03.GarageLogic;
 
-internal class Tires
+public class Tires
 {
     private class Tire
     {
@@ -77,6 +77,7 @@ internal class Tires
         {
             throw new ArgumentException("Wrong number of Tires");
         }
+        
         for(int i = 0; i < NumberOfTires; i++)
         {
             KeyValuePair<string, float> tireInfo = i_TireModelNamesAndPressures[i];
@@ -90,7 +91,8 @@ internal class Tires
             }
             else
             {
-                throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure, "Pressure outside of range");
+                throw new ValueRangeException(r_MaxAirPressure, Tire.k_MinPressure, 
+                    "Pressure outside of range");
             }
         }
     }
@@ -106,13 +108,13 @@ internal class Tires
     internal Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = new Dictionary<string, string>();
-        
         int tireIndex = 1;
         
         foreach (Tire tire in m_Tires)
         {
-            details.Add($"Tire {tireIndex++} ", tire.GetDetails());
+            details.Add($"Tire {tireIndex++}", tire.GetDetails());
         }
+        
         return details;
     }
     
@@ -122,10 +124,12 @@ internal class Tires
         {
             throw new ArgumentOutOfRangeException(nameof(i_TireIndex));
         }
+        
         if(i_PressurePercentage < Tire.k_MinPressure || i_PressurePercentage > Tire.k_MaxPressure)
         {
             throw new ArgumentOutOfRangeException(nameof(i_PressurePercentage));
         }
+        
         float newPressure = (i_PressurePercentage / Tire.k_MaxPressure) * r_MaxAirPressure;
         m_Tires[i_TireIndex].SetCurrentAirPressure(newPressure);
     }
