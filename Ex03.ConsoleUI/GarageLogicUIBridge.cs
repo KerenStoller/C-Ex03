@@ -142,11 +142,11 @@ class GarageLogicUIBridge
 
         try
         {
-            List<string> vehicleDetails = m_GarageLogic.GetDetails(licenseId);
+            Dictionary<string, string> vehicleDetails = m_GarageLogic.GetDetails(licenseId);
             Console.WriteLine("Vehicle details:");
-            foreach (string detail in vehicleDetails)
+            foreach (KeyValuePair<string, string> detail in vehicleDetails)
             {
-                Console.Write($"{detail} ");
+                Console.WriteLine($"{detail.Key}: {detail.Value} ");
             }
             Console.WriteLine();
         }
