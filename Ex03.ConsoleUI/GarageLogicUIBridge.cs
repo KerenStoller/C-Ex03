@@ -170,11 +170,11 @@ class GarageLogicUIBridge
 
         try
         {
-            List<string> vehicleDetails = m_GarageLogic.GetDetails(licenseId);
+            Dictionary<string, string> vehicleDetails = m_GarageLogic.GetDetails(licenseId);
             Console.WriteLine("Vehicle details:");
-            foreach (string detail in vehicleDetails)
+            foreach (KeyValuePair<string, string> detail in vehicleDetails)
             {
-                Console.Write($"{detail} ");
+                Console.WriteLine($"{detail.Key}: {detail.Value} ");
             }
             Console.WriteLine();
         }
@@ -397,10 +397,10 @@ class GarageLogicUIBridge
         int numberOfTires = m_GarageLogic.GetNumberOfTires(i_LicenseId);
         for (int i = 0; i < numberOfTires; i++)
         {
-            Console.WriteLine($"Please enter the tire model for tire {i + 1}: ");
+            Console.WriteLine($"Please enter the tire model for tire {i + 1} : ");
             string i_ModelName = Console.ReadLine();
 
-            Console.WriteLine($"Please enter the current air pressure for tire {i + 1}:");
+            Console.WriteLine($"Please enter the current air pressure for tire {i + 1} chose from the range 0 - {m_GarageLogic.getMaxAirPressure(i_LicenseId)}:");
             string currentAirPressureInput = Console.ReadLine();
 
             try
@@ -408,11 +408,9 @@ class GarageLogicUIBridge
                 float currentAirPressure = InputValidator.checkValidPositiveFloat(currentAirPressureInput);
                 tireDetails.Add(new KeyValuePair<string, float>(i_ModelName, currentAirPressure));
             }
-            catch (FormatException e)
+            catch (Exception e)
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Press any key to return to menu");
-                Console.ReadLine();
+                MenuManager.PrintError(e.Message);
                 return;
             }
         }
@@ -427,7 +425,7 @@ class GarageLogicUIBridge
     {
         Console.WriteLine("Please enter the tire model: ");
         string tireModel = Console.ReadLine();
-        Console.WriteLine("Please enter the current air pressure: ");
+        Console.WriteLine($"Please enter the current air pressure chose from the range 0 - {m_GarageLogic.getMaxAirPressure(i_LicenseId)} : ");
 
         string currentAirPressureInput = Console.ReadLine();
         float currentAirPressure;
@@ -436,11 +434,9 @@ class GarageLogicUIBridge
         {
             currentAirPressure = InputValidator.checkValidPositiveFloat(currentAirPressureInput);
         }
-        catch (FormatException e)
+        catch (Exception e)
         {
-            Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
+            MenuManager.PrintError(e.Message);
             return;
         }
 

@@ -17,11 +17,11 @@ public class Truck : Vehicle
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
     
-    public override List<string> GetDetails()
+    public override Dictionary<string, string> GetDetails()
     {
-        List<string> details = GetGeneralVehicleDetails();
-        details.Add(ContainsDangerousMaterials.ToString());
-        details.Add(CargoVolume.ToString());
+        Dictionary<string, string> details = GetGeneralVehicleDetails();
+        details.Add("Contains Dangerous Materials", ContainsDangerousMaterials.ToString());
+        details.Add("Cargo Volume", CargoVolume.ToString());
         return details;
     }
     
@@ -36,5 +36,10 @@ public class Truck : Vehicle
         {
             throw new FormatException(e.Message);
         }
+    }
+
+    public override float GetMaxAirPressure()
+    {
+        return k_MaxTireAirPressure;
     }
 }

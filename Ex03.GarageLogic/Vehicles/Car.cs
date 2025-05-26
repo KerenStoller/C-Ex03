@@ -23,11 +23,11 @@ public abstract class Car : Vehicle
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
 
-    public override List<string> GetDetails()
+    public override Dictionary<string, string> GetDetails()
     {
-        List<string> details = GetGeneralVehicleDetails();
-        details.Add(Color.ToString());
-        details.Add(NumberOfDoors.ToString());
+        Dictionary<string, string> details = GetGeneralVehicleDetails();
+        details.Add("Color", Color.ToString());
+        details.Add("Number of Doors", NumberOfDoors.ToString());
         return details;
     }
 
@@ -42,6 +42,11 @@ public abstract class Car : Vehicle
         {
             throw new FormatException(e.Message);
         }
+    }
+    
+    public override float GetMaxAirPressure()
+    {
+        return k_MaxTireAirPressure;
     }
 }
 

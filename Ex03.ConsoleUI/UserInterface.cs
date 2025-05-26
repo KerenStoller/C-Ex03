@@ -114,8 +114,6 @@ public class UserInterface
                 Console.ReadLine();
                 break;
         }
-        // Console.WriteLine("Press any key to return to menu");
-        // Console.ReadLine();
         Console.Clear();
     }
 
@@ -199,9 +197,4 @@ public class UserInterface
         Console.ReadLine();
         Console.Clear();
     }
-
-
-   
-
-    
 }

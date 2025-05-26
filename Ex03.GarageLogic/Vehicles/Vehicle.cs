@@ -27,7 +27,7 @@ public abstract class Vehicle
     
     public abstract void AddSpecificDetails(string i_Detail1, string i_Detail2);
     
-    public abstract List<string> GetDetails();
+    public abstract Dictionary<string, string> GetDetails();
 
     public void AddGeneralDetails(string i_OwnerName, string i_OwnerPhone, float i_EnergyPercentage)
     {
@@ -106,15 +106,21 @@ public abstract class Vehicle
         m_EnergySystem.RefillEnergy(i_TimeToChargeInMinutes);
     }
     
-    protected List<string> GetGeneralVehicleDetails()
+    protected Dictionary<string, string> GetGeneralVehicleDetails()
     {
-        List<string> details = new List<string>();
-        details.Add(r_LicenseId);
-        details.Add(r_ModelName);
-        details.Add(m_OwnerName);
-        details.Add(VehicleState.ToString());
-        details.AddRange(m_Tires.GetDetails());
-        details.AddRange(m_EnergySystem.GetDetails());
+        Dictionary<string, string> details = new Dictionary<string, string>();
+        details.Add("License ID", r_LicenseId);
+        details.Add("Model Name", r_ModelName);
+        details.Add("Owner Name", m_OwnerName);
+        details.Add("Owner Phone Number", m_OwnerPhoneNumber);
+        details.Add("Vehicle State", VehicleState.ToString());
+        
+        foreach (KeyValuePair<string, string> tireDetails in m_Tires.GetDetails())
+        {
+            details.Add(tireDetails.Key, tireDetails.Value);
+        }
+        
+        details.Add("Energy Details", m_EnergySystem.GetDetails());
         return details;
     }
     
@@ -128,5 +134,6 @@ public abstract class Vehicle
     {
         m_Tires.AddDetailsForAllTires(i_ModelName, i_AirPressure);
     }
-    
+
+    public abstract float GetMaxAirPressure();
 }
