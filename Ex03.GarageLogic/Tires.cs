@@ -1,51 +1,49 @@
-using System.Collections.Generic;
-
 namespace Ex03.GarageLogic;
 
-public class Tires
+internal class Tires
 {
     private class Tire
     {
         private string ModelName { get; set;}
         private readonly float r_MaxAirPressure;
         private float CurrAirPressure {get; set;}
-        public const float k_MinPressure = 0f;
-        public const float k_MaxPressure = 100f;
+        internal const float k_MinPressure = 0f;
+        internal const float k_MaxPressure = 100f;
 
-        public Tire(string i_ModelName, float i_MaxAirPressure)
+        internal Tire(string i_ModelName, float i_MaxAirPressure)
         {
             ModelName =  i_ModelName;
             r_MaxAirPressure = i_MaxAirPressure;
             CurrAirPressure = i_MaxAirPressure;
         }
 
-        public void SetModelName(string i_ModelName)
+        internal void SetModelName(string i_ModelName)
         {
             ModelName = i_ModelName;
         }
 
-        public void SetCurrentAirPressure(float i_CurrentAirPressure)
+        internal void SetCurrentAirPressure(float i_CurrentAirPressure)
         {
             CurrAirPressure = i_CurrentAirPressure;
         }
         
-        public void AddAirPressure(float i_PressurToAdd)
+        internal void AddAirPressure(float i_PressurToAdd)
         {
             CurrAirPressure = CurrAirPressure + i_PressurToAdd > r_MaxAirPressure ?
                 r_MaxAirPressure : CurrAirPressure + i_PressurToAdd;  
         }
 
-        public string GetDetails()
+        internal string GetDetails()
         {
             return $"{ModelName} - {CurrAirPressure} psi";
         }
     }
     
     private List<Tire> m_Tires;
-    public int NumberOfTires {get; protected set;}
+    internal int NumberOfTires {get;}
     private readonly float r_MaxAirPressure;
     
-    public Tires(int i_NumberOfTires, string i_ModelName, float i_MaxAirPressure)
+    internal Tires(int i_NumberOfTires, string i_ModelName, float i_MaxAirPressure)
     {
         NumberOfTires = i_NumberOfTires;
         m_Tires = new List<Tire>(NumberOfTires);
@@ -57,7 +55,7 @@ public class Tires
         }
     }
 
-    public void AddDetailsForAllTires(string i_TireModelName, float i_CurrentAirPressure)
+    internal void AddDetailsForAllTires(string i_TireModelName, float i_CurrentAirPressure)
     {
         if (i_CurrentAirPressure <= r_MaxAirPressure)
         {
@@ -73,7 +71,7 @@ public class Tires
         }
     }
 
-    public void AddDetailsForTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
+    internal void AddDetailsForTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
     {
         if(i_TireModelNamesAndPressures.Count != NumberOfTires)
         {
@@ -97,7 +95,7 @@ public class Tires
         }
     }
 
-    public void InflateTires()
+    internal void InflateTires()
     {
         foreach (Tire tire in m_Tires)
         {
@@ -105,7 +103,7 @@ public class Tires
         }
     }
 
-    public Dictionary<string, string> GetDetails()
+    internal Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = new Dictionary<string, string>();
         
@@ -118,7 +116,7 @@ public class Tires
         return details;
     }
     
-    public void SetPressureOfSingleTire(int i_TireIndex, float i_PressurePercentage)
+    internal void SetPressureOfSingleTire(int i_TireIndex, float i_PressurePercentage)
     {
         if(i_TireIndex < 0 || i_TireIndex >= m_Tires.Count)
         {

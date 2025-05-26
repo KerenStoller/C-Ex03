@@ -1,23 +1,21 @@
-using Ex03.GarageLogic.EnergySystem;
-
 namespace Ex03.GarageLogic;
 
-public abstract class Vehicle
+internal abstract class Vehicle
 {
-    public enum eVehicleState
+    internal enum eVehicleState
     {
         InRepair = 1, 
         Repaired,
         Paid
     }
     
-    public readonly string r_ModelName;
-    public readonly string r_LicenseId;
+    internal readonly string r_ModelName;
+    internal readonly string r_LicenseId;
     protected Tires m_Tires;
     protected string m_OwnerName;
     private string m_OwnerPhoneNumber;
-    public eVehicleState VehicleState { get; set; } =  eVehicleState.InRepair;
-    protected EnergySystem.EnergySystem m_EnergySystem;
+    internal eVehicleState VehicleState { get; set; } =  eVehicleState.InRepair;
+    protected EnergySystem m_EnergySystem;
     
     protected Vehicle(string i_LicenseId, string i_ModelName)
     {
@@ -25,29 +23,28 @@ public abstract class Vehicle
         r_ModelName = i_ModelName;
     }
     
-    public abstract void AddSpecificDetails(string i_Detail1, string i_Detail2);
+    internal abstract void AddSpecificDetails(string i_Detail1, string i_Detail2);
     
-    public abstract Dictionary<string, string> GetDetails();
+    internal abstract Dictionary<string, string> GetDetails();
 
-    public void AddGeneralDetails(string i_OwnerName, string i_OwnerPhone, float i_EnergyPercentage)
+    internal void AddGeneralDetails(string i_OwnerName, string i_OwnerPhone, float i_EnergyPercentage)
     {
         m_OwnerName = i_OwnerName;
         m_OwnerPhoneNumber = i_OwnerPhone;
         m_EnergySystem.AddDetails(i_EnergyPercentage);
-        //Throws ValueRangeException
     }
 
-    public void AddGeneralTires(string i_TireModelName, float i_CurrentAirPressure)
+    internal void AddGeneralTires(string i_TireModelName, float i_CurrentAirPressure)
     {
         m_Tires.AddDetailsForAllTires(i_TireModelName, i_CurrentAirPressure);
     }
     
-    public void AddSpecificTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
+    internal void AddSpecificTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
     {
         m_Tires.AddDetailsForTires(i_TireModelNamesAndPressures);
     }
     
-    public bool IsElectric()
+    internal bool IsElectric()
     {
         return m_EnergySystem.IsElectric;
     }
@@ -88,23 +85,23 @@ public abstract class Vehicle
         }
     }
     
-    public int NumberOfTires()
+    internal int NumberOfTires()
     {
         return m_Tires.NumberOfTires;
     }
 
-    public void InflateTires()
+    internal void InflateTires()
     {
         m_Tires.InflateTires();
     }
 
-    public void FillTank(string i_FuelType, float i_AmountOfFuelToAdd)
+    internal void FillTank(string i_FuelType, float i_AmountOfFuelToAdd)
     {
         validateFuelType(i_FuelType);
         m_EnergySystem.RefillEnergy(i_AmountOfFuelToAdd);
     }
 
-    public static eVehicleState validateState(string i_State)
+    internal static eVehicleState validateState(string i_State)
     {
         try
         {
@@ -118,12 +115,12 @@ public abstract class Vehicle
         }
     }
 
-    public void UpdateState(string i_State)
+    internal void UpdateState(string i_State)
     {
         VehicleState = validateState(i_State);
     }
 
-    public void ChargeBattery(float i_TimeToChargeInMinutes)
+    internal void ChargeBattery(float i_TimeToChargeInMinutes)
     {
         validateElectric();
         m_EnergySystem.RefillEnergy(i_TimeToChargeInMinutes);
@@ -147,16 +144,16 @@ public abstract class Vehicle
         return details;
     }
     
-    public void SetPressureOfSingleTire(int i_Index, float i_AirPressure)
+    internal void SetPressureOfSingleTire(int i_Index, float i_AirPressure)
     {
         m_Tires.SetPressureOfSingleTire(i_Index, i_AirPressure);
         
     }
 
-    public void SetPressureOfAllTires(string i_ModelName, float i_AirPressure)
+    internal void SetPressureOfAllTires(string i_ModelName, float i_AirPressure)
     {
         m_Tires.AddDetailsForAllTires(i_ModelName, i_AirPressure);
     }
 
-    public abstract float GetMaxAirPressure();
+    internal abstract float GetMaxAirPressure();
 }

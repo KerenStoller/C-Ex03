@@ -1,24 +1,24 @@
-namespace Ex03.GarageLogic.EnergySystem;
+namespace Ex03.GarageLogic;
 
-public abstract class EnergySystem
+internal abstract class EnergySystem
 {
     private const float k_MaxPercentage = 100;
     private const float k_MinPercentage = 0;
     protected float CurrentEnergyAmount { get; set; }
     protected readonly float r_MaxEnergyCapacity;
     protected float EnergyPercentage { get; set; }
-    public abstract bool IsElectric { get; }
+    internal abstract bool IsElectric { get; }
     
-    public abstract string GetDetails();
+    internal abstract string GetDetails();
     
-    public void RefillEnergy(float i_EnergyToAdd)
+    internal void RefillEnergy(float i_EnergyToAdd)
     {
         CurrentEnergyAmount = CurrentEnergyAmount + i_EnergyToAdd > r_MaxEnergyCapacity ?
             r_MaxEnergyCapacity : CurrentEnergyAmount + i_EnergyToAdd;
         EnergyPercentage = CurrentEnergyAmount / r_MaxEnergyCapacity * k_MaxPercentage;
     }
 
-    public void AddDetails(float i_EnergyPercentage)
+    internal void AddDetails(float i_EnergyPercentage)
     {
         if (i_EnergyPercentage >= k_MinPercentage && i_EnergyPercentage <= k_MaxPercentage)
         {
@@ -31,7 +31,7 @@ public abstract class EnergySystem
         }
     }
     
-    public EnergySystem(float i_MaxEnergyCapacity)
+    internal EnergySystem(float i_MaxEnergyCapacity)
     {
         r_MaxEnergyCapacity = i_MaxEnergyCapacity;
         CurrentEnergyAmount = r_MaxEnergyCapacity;
@@ -43,39 +43,39 @@ public abstract class EnergySystem
     }
 }
 
-public class Battery : EnergySystem
+internal class Battery : EnergySystem
 {
-    public override bool IsElectric => true;
-    public Battery(float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity) {}
+    internal override bool IsElectric => true;
+    internal Battery(float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity) {}
 
-    public override string GetDetails()
+    internal override string GetDetails()
     {
         return GetGeneralDetails();
     }
 }
 
-public class FuelSystem : EnergySystem
+internal class FuelSystem : EnergySystem
 {
-    public enum eFuelType
+    internal enum eFuelType
     {
         Soler = 1, Octan95, Octan96, Octan98
     }
 
     private readonly eFuelType r_MFuelType;
     
-    public override bool IsElectric => false;
+    internal override bool IsElectric => false;
 
-    public FuelSystem(eFuelType i_FuelType,  float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity)
+    internal FuelSystem(eFuelType i_FuelType,  float i_MaxEnergyCapacity) : base(i_MaxEnergyCapacity)
     {
         r_MFuelType = i_FuelType;
     }
 
-    public eFuelType GetFuelType()
+    internal eFuelType GetFuelType()
     {
         return r_MFuelType;
     }
 
-    public override string GetDetails()
+    internal override string GetDetails()
     {
         string details = $"{GetGeneralDetails()}\nFuel Type: {r_MFuelType}";
         return details;

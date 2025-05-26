@@ -1,6 +1,6 @@
-namespace Ex03.GarageLogic;
+namespace Ex03.GarageLogic.GarageDB;
 
-public class GarageDb
+internal class GarageDb
 {
     private const string k_EndOfFile = "*****";
     private const string k_FileName = "Vehicles.db";

@@ -1,12 +1,10 @@
-using Ex03.GarageLogic.EnergySystem;
-
 namespace Ex03.GarageLogic;
 
-public abstract class Motorcycle : Vehicle
+internal abstract class Motorcycle : Vehicle
 {
     private const int k_NumberOfTires = 2;
     private const float k_MaxTireAirPressure = 30;
-    public enum eLicenseType
+    internal enum eLicenseType
     {
         A = 1, A2, AB, B2
     }
@@ -18,7 +16,7 @@ public abstract class Motorcycle : Vehicle
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
     
-    public override Dictionary<string, string> GetDetails()
+    internal override Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = GetGeneralVehicleDetails();
         details.Add("License Type", LicenseType.ToString());
@@ -26,7 +24,7 @@ public abstract class Motorcycle : Vehicle
         return details;
     }
     
-    public override void AddSpecificDetails(string i_LicenseType, string i_EngineCapacity)
+    internal override void AddSpecificDetails(string i_LicenseType, string i_EngineCapacity)
     {
         try
         {
@@ -39,28 +37,28 @@ public abstract class Motorcycle : Vehicle
         }
     }
 
-    public override float GetMaxAirPressure()
+    internal override float GetMaxAirPressure()
     {
         return k_MaxTireAirPressure;
     }
 }
 
-public class ElectricMotorcycle : Motorcycle
+internal class ElectricMotorcycle : Motorcycle
 {
     private const float k_MaxBatterCapacityHours = 3.2f;
     
-    public ElectricMotorcycle(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
+    internal ElectricMotorcycle(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new Battery(k_MaxBatterCapacityHours);
     }
 }
 
-public class FuelMotorcycle : Motorcycle
+internal class FuelMotorcycle : Motorcycle
 {
     private const FuelSystem.eFuelType k_FuelType = FuelSystem.eFuelType.Octan98;
     private const float k_FuelTankCapacityLiter = 5.8f;
     
-    public FuelMotorcycle(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
+    internal FuelMotorcycle(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new FuelSystem(k_FuelType, k_FuelTankCapacityLiter);
     }

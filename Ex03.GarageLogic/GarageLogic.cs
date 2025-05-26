@@ -1,6 +1,5 @@
-﻿using Ex03.GarageLogic.EnergySystem;
-
-namespace Ex03.GarageLogic;
+﻿namespace Ex03.GarageLogic;
+using Ex03.GarageLogic.GarageDB;
 
 public class GarageLogic
 {

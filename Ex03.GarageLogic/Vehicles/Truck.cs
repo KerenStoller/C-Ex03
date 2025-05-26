@@ -1,8 +1,6 @@
-using Ex03.GarageLogic.EnergySystem;
-
 namespace Ex03.GarageLogic;
 
-public class Truck : Vehicle
+internal class Truck : Vehicle
 {
     private const FuelSystem.eFuelType k_FuelType = FuelSystem.eFuelType.Soler;
     private const float k_FuelTankCapacityLiter = 135;
@@ -11,13 +9,13 @@ public class Truck : Vehicle
     private bool ContainsDangerousMaterials { get; set; }
     private float CargoVolume { get; set; }
 
-    public Truck(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
+    internal Truck(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new FuelSystem(k_FuelType, k_FuelTankCapacityLiter);
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
     
-    public override Dictionary<string, string> GetDetails()
+    internal override Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = GetGeneralVehicleDetails();
         details.Add("Contains Dangerous Materials", ContainsDangerousMaterials.ToString());
@@ -25,7 +23,7 @@ public class Truck : Vehicle
         return details;
     }
     
-    public override void AddSpecificDetails(string i_ContainsDangerousMaterial, string i_CargoVolume)
+    internal override void AddSpecificDetails(string i_ContainsDangerousMaterial, string i_CargoVolume)
     {
         try
         {
@@ -38,7 +36,7 @@ public class Truck : Vehicle
         }
     }
 
-    public override float GetMaxAirPressure()
+    internal override float GetMaxAirPressure()
     {
         return k_MaxTireAirPressure;
     }

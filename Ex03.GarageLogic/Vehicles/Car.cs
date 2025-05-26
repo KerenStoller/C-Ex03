@@ -1,17 +1,14 @@
-using System.Collections.Generic;
-using Ex03.GarageLogic.EnergySystem;
-
 namespace Ex03.GarageLogic;
 
-public abstract class Car : Vehicle
+internal abstract class Car : Vehicle
 {
     private const int k_NumberOfTires = 5;
     private const float k_MaxTireAirPressure = 32;
-    public enum eColor
+    internal enum eColor
     {
         Yellow = 1, Black, White, Silver
     }
-    public enum eNumberOfDoors
+    internal enum eNumberOfDoors
     {
         Two = 1, Three, Four, Five
     }
@@ -23,7 +20,7 @@ public abstract class Car : Vehicle
         m_Tires = new Tires(k_NumberOfTires, "ModelName", k_MaxTireAirPressure);
     }
 
-    public override Dictionary<string, string> GetDetails()
+    internal override Dictionary<string, string> GetDetails()
     {
         Dictionary<string, string> details = GetGeneralVehicleDetails();
         details.Add("Color", Color.ToString());
@@ -31,7 +28,7 @@ public abstract class Car : Vehicle
         return details;
     }
 
-    public override void AddSpecificDetails(string i_Color, string i_NumberOfDoors)
+    internal override void AddSpecificDetails(string i_Color, string i_NumberOfDoors)
     {
         try
         {
@@ -44,28 +41,28 @@ public abstract class Car : Vehicle
         }
     }
     
-    public override float GetMaxAirPressure()
+    internal override float GetMaxAirPressure()
     {
         return k_MaxTireAirPressure;
     }
 }
 
-public class ElectricCar : Car
+internal class ElectricCar : Car
 {
     private const float k_MaxBatterCapacityHours = 4.8f;
-    public ElectricCar(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
+    internal ElectricCar(string i_LicenseId, string i_ModelName) : base( i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new Battery(k_MaxBatterCapacityHours);
     }
     
 }
 
-public class FuelCar : Car
+internal class FuelCar : Car
 {
     private const FuelSystem.eFuelType k_FuelType = FuelSystem.eFuelType.Octan95;
     private const float k_FuelTankCapacityLiter = 48f;
     
-    public FuelCar(string i_LicenseId, string i_ModelName) : base(i_LicenseId, i_ModelName)
+    internal FuelCar(string i_LicenseId, string i_ModelName) : base(i_LicenseId, i_ModelName)
     {
         m_EnergySystem = new FuelSystem(k_FuelType, k_FuelTankCapacityLiter);
     }

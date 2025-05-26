@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
     public abstract class VehicleCreator
     {
