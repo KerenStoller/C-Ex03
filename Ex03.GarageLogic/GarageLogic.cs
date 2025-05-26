@@ -5,7 +5,7 @@ public class GarageLogic
 {
     private Dictionary<string, Vehicle> m_Vehicles;
     private GarageDb m_GarageDb;
-    private const bool k_SetAllTiresAtOnce = true;
+    private const bool v_SetAllTiresAtOnce = true;
 
     public enum eEnumOptions
     {
@@ -115,7 +115,7 @@ public class GarageLogic
             }
             
             CreateVehicle(initialDetails);
-            UpdateVehicle(licenseId, updateDetails, k_SetAllTiresAtOnce);
+            UpdateVehicle(licenseId, updateDetails, v_SetAllTiresAtOnce);
         }
     }
 
