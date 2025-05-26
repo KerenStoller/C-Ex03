@@ -7,6 +7,16 @@ public class GarageLogic
     private Dictionary<string, Vehicle> m_Vehicles;
     private GarageDb m_GarageDb;
     private const bool k_SetAllTiresAtOnce = true;
+
+    public enum eEnumOptions
+    {
+        CarColor, 
+        CarDoors, 
+        MotorcycleLicense,
+        FuelType,
+        VehicleState,
+        SupportedTypes
+    }
     
     public GarageLogic()
     {
@@ -61,6 +71,7 @@ public class GarageLogic
         }
         catch (FormatException e)
         {
+            m_Vehicles.Remove(i_LicenseId);
             throw new FormatException($"Invalid number format in vehicle details: {e.Message}", e);
         }
 
@@ -72,10 +83,18 @@ public class GarageLogic
         ownerName = i_DetailsAboutVehicle[index++];
         ownerPhone = i_DetailsAboutVehicle[index++];
         detail1 = i_DetailsAboutVehicle[index++];
-        detail2 = i_DetailsAboutVehicle[index++];
+        detail2 = i_DetailsAboutVehicle[index];
 
-        vehicle.AddGeneralDetails(ownerName, ownerPhone, energyPercentage);
-        vehicle.AddSpecificDetails(detail1, detail2);
+        try
+        {
+            vehicle.AddGeneralDetails(ownerName, ownerPhone, energyPercentage);
+            vehicle.AddSpecificDetails(detail1, detail2);
+        }
+        catch
+        {
+            m_Vehicles.Remove(i_LicenseId);
+            throw;
+        }
     }
     
     public void AddVehiclesFromDb()
@@ -128,19 +147,20 @@ public class GarageLogic
         m_Vehicles[i_LicenseId].VehicleState = Vehicle.eVehicleState.InRepair;
     }
 
-    public List<string> GetLicenseIdOfAllVehiclesInGarage(Vehicle.eVehicleState? i_FilterByState)
+    public List<string> GetLicenseIdOfAllVehiclesInGarage(string i_FilterByState)
     {
         List<string> listToReturn = new List<string>();
         
-        if (i_FilterByState == null)
+        if (i_FilterByState == "")
         {
-            listToReturn = m_Vehicles.Keys.ToList();;
+            listToReturn = m_Vehicles.Keys.ToList();
         }
         else
         {
+            Vehicle.eVehicleState filterState = Vehicle.validateState(i_FilterByState);
             foreach (KeyValuePair<string, Vehicle> pair in m_Vehicles)
             {
-                if (pair.Value.VehicleState == i_FilterByState)
+                if (pair.Value.VehicleState == filterState)
                 {
                     listToReturn.Add(pair.Key);
                 }
@@ -150,10 +170,10 @@ public class GarageLogic
         return  listToReturn;
     }
 
-    public void ChangeVehicleState(string i_LicenseId, Vehicle.eVehicleState i_NewStateInString)
+    public void ChangeVehicleState(string i_LicenseId, string i_NewStateInString)
     {
         validateVehicleInGarage(i_LicenseId);
-        m_Vehicles[i_LicenseId].VehicleState = i_NewStateInString;
+        m_Vehicles[i_LicenseId].UpdateState(i_NewStateInString);
     }
 
     public void InflateTires(string i_LicenseId)
@@ -162,7 +182,7 @@ public class GarageLogic
         m_Vehicles[i_LicenseId].InflateTires();
     }
 
-    public void FillTank(string i_LicenseId, FuelSystem.eFuelType i_FuelType, float i_AmountOfFuelToAdd)
+    public void FillTank(string i_LicenseId, string i_FuelType, float i_AmountOfFuelToAdd)
     {
         validateVehicleInGarage(i_LicenseId);
         m_Vehicles[i_LicenseId].FillTank(i_FuelType, i_AmountOfFuelToAdd);
@@ -210,9 +230,31 @@ public class GarageLogic
         return m_Vehicles[i_LicenseId].NumberOfTires();
     }
     
-    public float getMaxAirPressure(string i_LicenseId)
+    public static List<string> GetEnumOptions(eEnumOptions i_EnumOption)
     {
-        validateVehicleInGarage(i_LicenseId);
-        return m_Vehicles[i_LicenseId].GetMaxAirPressure();
+        List<string> listToReturn = new List<string>();
+        switch (i_EnumOption)
+        {
+            case eEnumOptions.CarColor:
+                listToReturn = Enum.GetNames(typeof(Car.eColor)).ToList();
+                break;
+            case eEnumOptions.CarDoors:
+                listToReturn = Enum.GetNames(typeof(Car.eNumberOfDoors)).ToList();
+                break;
+            case eEnumOptions.MotorcycleLicense:
+                listToReturn = Enum.GetNames(typeof(Motorcycle.eLicenseType)).ToList();
+                break;
+            case eEnumOptions.FuelType:
+                listToReturn = Enum.GetNames(typeof(FuelSystem.eFuelType)).ToList();
+                break;
+            case eEnumOptions.VehicleState:
+                listToReturn = Enum.GetNames(typeof(Vehicle.eVehicleState)).ToList();
+                break;
+            case eEnumOptions.SupportedTypes:
+                listToReturn = VehicleCreator.SupportedTypes;
+                break;
+        }
+        
+        return listToReturn;
     }
 }

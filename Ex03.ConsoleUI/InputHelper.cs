@@ -1,31 +1,18 @@
-﻿using Ex03.GarageLogic.EnergySystem;
-
-namespace Ex03.ConsoleUI;
-using Ex03.GarageLogic;
+﻿namespace Ex03.ConsoleUI;
 
 public static class InputHelper
 {
-    public enum eMenuOptions
-    {
-        LoadVehiclesFromFile = 1,
-        AddVehicleToGarage,
-        ShowAllVehiclesInGarage,
-        ChangeVehicleState,
-        InflateTires,
-        FuelVehicle,
-        ChargeVehicle,
-        ShowVehicleDetails,
-        Exit
-    }
-    
-    public enum eVehicleTypesOptions
-    {
-        FuelCar = 1,
-        ElectricCar,
-        FuelMotorcycle,
-        ElectricMotorcycle,
-        Truck
-    }
+    public static readonly List<string> k_MenuOptions = new List<string> 
+        { "Load vehicles from file", 
+            "Add a new vehicle to the garage",
+            "Show all vehicles in the garage",
+            "Change vehicle status",
+            "Inflate tires",
+            "Fuel vehicle (only available for fuel vehicles)",
+            "Charge vehicle (only available for electric vehicles)",
+            "Show vehicle details",
+            "Exit"
+        };
 
     public static string GetLicenseId()
     {
@@ -62,29 +49,60 @@ public static class InputHelper
         return result;
     }
     
-    public static T GetEnum<T>(string enumType) where T : struct
+    private static void printErrorAndTryAgain(string message)
     {
+        Console.WriteLine(message);
+        Console.WriteLine("Press any key to try again");
+        Console.ReadLine();
+        Console.Clear();
+    }
+    
+    public static string GetEnumInString(string enumType, List<string> options, bool i_AllowNone = false) 
+    {
+        string returnString = "";
         while (true)
         {
             Console.WriteLine($"Please choose the {enumType} from the following:");
-            int enumNumberValue = 1;
-            foreach (var val in Enum.GetValues(typeof(T)))
+            for (int i = 0; i < options.Count; i++)
             {
-                Console.Write($"{enumNumberValue}) {val}");
-                Console.WriteLine();
-                enumNumberValue++;
+                Console.WriteLine($"{i + 1}) {options[i]}");
             }
         
             Console.WriteLine();
             string? input = Console.ReadLine();
-        
-            if (Enum.TryParse<T>(input, true, out var result) && Enum.IsDefined(typeof(T), result))
+            bool foundOption = false;
+            
+            if (int.TryParse(input, out int index) && index >= 1 && index <= options.Count)
             {
                 Console.Clear();
-                return result;
+                returnString = options[index - 1];
             }
-
-            MenuManager.PrintErrorAndTryAgain("Invalid input, please try again.");
+            else
+            {
+                foreach (string option in options)
+                {
+                    if (input.ToLower() == option.ToLower())
+                    {
+                        returnString = option;
+                        foundOption = true;
+                        break;
+                    }
+                }
+                if (i_AllowNone && !foundOption)
+                {
+                    Console.WriteLine("Invalid choice. Showing all instead.");
+                    returnString = "";
+                }
+            }
+            
+            if (!i_AllowNone && returnString == "")
+            {
+                printErrorAndTryAgain("Invalid input.");
+            }
+            else
+            {
+                return returnString;
+            }
         }
     }
 
@@ -102,7 +120,7 @@ public static class InputHelper
             }
             catch (Exception e)
             {
-                MenuManager.PrintErrorAndTryAgain(e.Message);
+                printErrorAndTryAgain(e.Message);
             }
         }
     }
@@ -138,30 +156,54 @@ public static class InputHelper
             Console.WriteLine("Invalid input. Please type 'yes' or 'no'.");
         }
     }
-    
-    public static Vehicle.eVehicleState? GetValidVehicleStateOrNull()
-    {
-        Vehicle.eVehicleState? returnValue = null;
-        
-        Console.WriteLine("Select vehicle state to filter by:");
-        foreach (string state in Enum.GetNames(typeof(Vehicle.eVehicleState)))
-        {
-            Console.WriteLine($"- {state}");
-        }
-        
-        Console.WriteLine("Or press Enter to show all vehicles.");
-        string? userInput = Console.ReadLine();
-        
-        if (Enum.TryParse<Vehicle.eVehicleState>(userInput, ignoreCase: true, out var vehicleState) &&
-            Enum.IsDefined(typeof(Vehicle.eVehicleState), vehicleState))
-        {
-            returnValue = vehicleState;
-        }
-        else
-        {
-            Console.WriteLine("Invalid state. Showing all vehicles instead.");
-        }
 
-        return returnValue;
+    public static string GetEnumInStringOrNone(string enumType, List<string> options , bool i_AllowNone = false)
+    {
+        string returnString = "";
+        while (true)
+        {
+            Console.WriteLine($"Please choose the {enumType} from the following:");
+            for (int i = 0; i < options.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}) {options[i]}");
+            }
+        
+            Console.WriteLine();
+            string? input = Console.ReadLine();
+            bool foundOption = false;
+            
+            if (int.TryParse(input, out int index) && index >= 1 && index <= options.Count)
+            {
+                Console.Clear();
+                returnString = options[index - 1];
+            }
+            else
+            {
+                foreach (string option in options)
+                {
+                    if (input.ToLower() == option.ToLower())
+                    {
+                        returnString = option;
+                        foundOption = true;
+                        break;
+                    }
+                }
+                if (i_AllowNone && !foundOption)
+                {
+                    Console.WriteLine("Invalid input, showing all instead.");
+                    returnString = "";
+                }
+            }
+
+            
+            if (!i_AllowNone && returnString == "")
+            {
+                printErrorAndTryAgain("Invalid input, please try again.");
+            }
+            else
+            {
+                return returnString;
+            }
+        }
     }
 }

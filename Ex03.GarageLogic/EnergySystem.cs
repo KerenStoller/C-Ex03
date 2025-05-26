@@ -15,6 +15,7 @@ public abstract class EnergySystem
     {
         CurrentEnergyAmount = CurrentEnergyAmount + i_EnergyToAdd > r_MaxEnergyCapacity ?
             r_MaxEnergyCapacity : CurrentEnergyAmount + i_EnergyToAdd;
+        EnergyPercentage = CurrentEnergyAmount / r_MaxEnergyCapacity * k_MaxPercentage;
     }
 
     public void AddDetails(float i_EnergyPercentage)

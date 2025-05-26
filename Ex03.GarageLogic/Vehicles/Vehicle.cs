@@ -68,12 +68,23 @@ public abstract class Vehicle
         }
     }
     
-    private void validateFuelType(FuelSystem.eFuelType i_FuelType)
+    private void validateFuelType(string i_FuelType)
     {
         validateNotElectric();
-        if (((FuelSystem)m_EnergySystem).GetFuelType() != i_FuelType)
+        
+        try
         {
-            throw new ArgumentException("Fuel type is different");
+            FuelSystem.eFuelType fuelType = (FuelSystem.eFuelType)Enum.Parse
+                (typeof(FuelSystem.eFuelType), i_FuelType, true);
+
+            if (((FuelSystem)m_EnergySystem).GetFuelType() != fuelType)
+            {
+                throw new ArgumentException("Fuel type is different");
+            }
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException("Invalid fuel type");
         }
     }
     
@@ -87,10 +98,29 @@ public abstract class Vehicle
         m_Tires.InflateTires();
     }
 
-    public void FillTank(FuelSystem.eFuelType i_FuelType, float i_AmountOfFuelToAdd)
+    public void FillTank(string i_FuelType, float i_AmountOfFuelToAdd)
     {
         validateFuelType(i_FuelType);
         m_EnergySystem.RefillEnergy(i_AmountOfFuelToAdd);
+    }
+
+    public static eVehicleState validateState(string i_State)
+    {
+        try
+        {
+            eVehicleState newState = (eVehicleState)Enum.Parse
+                (typeof(eVehicleState), i_State, true);
+            return newState;
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException("Invalid state type");
+        }
+    }
+
+    public void UpdateState(string i_State)
+    {
+        VehicleState = validateState(i_State);
     }
 
     public void ChargeBattery(float i_TimeToChargeInMinutes)
