@@ -6,7 +6,7 @@ public abstract class Vehicle
 {
     public enum eVehicleState
     {
-        InRepair, 
+        InRepair = 1, 
         Repaired,
         Paid
     }
@@ -68,17 +68,10 @@ public abstract class Vehicle
         }
     }
     
-    private void validateFuelType(string i_FuelTypeString)
+    private void validateFuelType(FuelSystem.eFuelType i_FuelType)
     {
         validateNotElectric();
-        if (!Enum.IsDefined(typeof(FuelSystem.eFuelType), i_FuelTypeString))
-        { 
-            throw new ArgumentException($"{i_FuelTypeString} is not a valid fuel type");
-        }
-        
-        FuelSystem.eFuelType fuelType = (FuelSystem.eFuelType)Enum.Parse(typeof(FuelSystem.eFuelType), i_FuelTypeString);
-        
-        if (((FuelSystem)m_EnergySystem).GetFuelType() != fuelType)
+        if (((FuelSystem)m_EnergySystem).GetFuelType() != i_FuelType)
         {
             throw new ArgumentException("Fuel type is different");
         }
@@ -94,7 +87,7 @@ public abstract class Vehicle
         m_Tires.InflateTires();
     }
 
-    public void FillTank(string i_FuelType, float i_AmountOfFuelToAdd)
+    public void FillTank(FuelSystem.eFuelType i_FuelType, float i_AmountOfFuelToAdd)
     {
         validateFuelType(i_FuelType);
         m_EnergySystem.RefillEnergy(i_AmountOfFuelToAdd);

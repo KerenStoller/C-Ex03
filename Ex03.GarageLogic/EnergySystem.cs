@@ -61,7 +61,7 @@ public class FuelSystem : EnergySystem
 {
     public enum eFuelType
     {
-        Soler, Octan95, Octan96, Octan98
+        Soler = 1, Octan95, Octan96, Octan98
     }
 
     private readonly eFuelType r_MFuelType;

@@ -128,22 +128,19 @@ public class GarageLogic
         m_Vehicles[i_LicenseId].VehicleState = Vehicle.eVehicleState.InRepair;
     }
 
-    public List<string> GetLicenseIdOfAllVehiclesInGarage(string? i_FilterByState)
+    public List<string> GetLicenseIdOfAllVehiclesInGarage(Vehicle.eVehicleState? i_FilterByState)
     {
-        List<string> listToReturn;
+        List<string> listToReturn = new List<string>();
         
-        if (i_FilterByState == null ||!Enum.TryParse(i_FilterByState, ignoreCase: true, out Vehicle.eVehicleState filterByState))
+        if (i_FilterByState == null)
         {
             listToReturn = m_Vehicles.Keys.ToList();;
         }
         else
         {
-            
-            listToReturn = new List<string>();
-            
             foreach (KeyValuePair<string, Vehicle> pair in m_Vehicles)
             {
-                if (pair.Value.VehicleState == filterByState)
+                if (pair.Value.VehicleState == i_FilterByState)
                 {
                     listToReturn.Add(pair.Key);
                 }
@@ -153,18 +150,10 @@ public class GarageLogic
         return  listToReturn;
     }
 
-    public void ChangeVehicleState(string i_LicenseId, string i_NewStateInString)
+    public void ChangeVehicleState(string i_LicenseId, Vehicle.eVehicleState i_NewStateInString)
     {
-
-        bool validState = Enum.TryParse(i_NewStateInString, ignoreCase: true, out Vehicle.eVehicleState iNewState);
-
-        if (!validState)
-        {
-            throw new ArgumentException("Invalid vehicle state");
-        }
-
         validateVehicleInGarage(i_LicenseId);
-        m_Vehicles[i_LicenseId].VehicleState = iNewState;
+        m_Vehicles[i_LicenseId].VehicleState = i_NewStateInString;
     }
 
     public void InflateTires(string i_LicenseId)
@@ -173,7 +162,7 @@ public class GarageLogic
         m_Vehicles[i_LicenseId].InflateTires();
     }
 
-    public void FillTank(string i_LicenseId, string i_FuelType, float i_AmountOfFuelToAdd)
+    public void FillTank(string i_LicenseId, FuelSystem.eFuelType i_FuelType, float i_AmountOfFuelToAdd)
     {
         validateVehicleInGarage(i_LicenseId);
         m_Vehicles[i_LicenseId].FillTank(i_FuelType, i_AmountOfFuelToAdd);
@@ -208,6 +197,7 @@ public class GarageLogic
         validateVehicleInGarage(i_LicenseId);
         return m_Vehicles[i_LicenseId] is Motorcycle;
     }
+    
     public bool IsElectric(string i_LicenseId)
     {
         validateVehicleInGarage(i_LicenseId);

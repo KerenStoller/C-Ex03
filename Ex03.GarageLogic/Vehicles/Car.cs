@@ -5,15 +5,15 @@ namespace Ex03.GarageLogic;
 
 public abstract class Car : Vehicle
 {
-    private const int k_NumberOfTires = 4;
+    private const int k_NumberOfTires = 5;
     private const float k_MaxTireAirPressure = 32;
     public enum eColor
     {
-        Yellow, Black, White, Silver
+        Yellow = 1, Black, White, Silver
     }
     public enum eNumberOfDoors
     {
-        Two, Three, Four, Five
+        Two = 1, Three, Four, Five
     }
     private eColor Color { get; set; }
     private eNumberOfDoors NumberOfDoors { get; set; }

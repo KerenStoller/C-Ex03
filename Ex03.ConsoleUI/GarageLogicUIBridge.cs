@@ -24,9 +24,9 @@ class GarageLogicUIBridge
 {
     private readonly GarageLogic m_GarageLogic;
 
-    public GarageLogicUIBridge(GarageLogic i_GarageLogic)
+    public GarageLogicUIBridge()
     {
-        m_GarageLogic = i_GarageLogic;
+        m_GarageLogic = new GarageLogic();
     }
 
     public void LoadVehiclesFromFile()
@@ -35,84 +35,57 @@ class GarageLogicUIBridge
         {
             m_GarageLogic.AddVehiclesFromDb();
             Console.WriteLine("Vehicles loaded from file.");
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
         }
+        MenuManager.PauseClearAndReturnToMenu();
     }
-
 
     public void ChargeVehicle()
     {
-        Console.WriteLine("Please enter your vehicle registration number: ");
-
-        string licenseId = Console.ReadLine();
-
+        string licenseId = InputHelper.GetLicenseId();
         Console.WriteLine("Please enter the amount of time to charge (in minutes): ");
-
-        string chargeTimeInput = Console.ReadLine();
-
-        float chargeTime = InputValidator.checkValidPositiveFloat(chargeTimeInput);
+        float timeToCharge = InputHelper.GetNonNegativeFloat();
 
         try
         {
-            m_GarageLogic.ChargeBattery(licenseId, chargeTime);
+            m_GarageLogic.ChargeBattery(licenseId, timeToCharge);
         }
         catch (Exception e)
         {
-            MenuManager.PrintError(e.Message);
+            MenuManager.PrintMessageAndGoBackToMenu(e.Message);
             return;
         }
 
-        MenuManager.PrintSuccess("Vehicle charged successfully.");
+        MenuManager.PrintMessageAndGoBackToMenu("Vehicle charged successfully.");
     }
-
 
     public void FuelVehicle()
     {
-        Console.WriteLine("Please enter registration number: ");
-        string licenseId = Console.ReadLine();
-
-        Console.WriteLine("Please enter the type of fuel from the following: ");
-
-        foreach (FuelSystem.eFuelType fuel in Enum.GetValues(typeof(FuelSystem.eFuelType)))
-        {
-            Console.Write($"{fuel} ");
-        }
-
-        Console.WriteLine();
-
-        string fuelTypeInput = Console.ReadLine();
-
+        string licenseId = InputHelper.GetLicenseId();
+        FuelSystem.eFuelType fuelType = InputHelper.GetEnum<FuelSystem.eFuelType>
+            ("type of fuel");
         Console.WriteLine("Please enter the amount of fuel to add: ");
-
-        string fuelAmountInput = Console.ReadLine();
-        
-        float fuelAmount = InputValidator.checkValidPositiveFloat(fuelAmountInput);
+        float fuelAmount = InputHelper.GetNonNegativeFloat();
 
         try
         {
-            m_GarageLogic.FillTank(licenseId, fuelTypeInput, fuelAmount);
+            m_GarageLogic.FillTank(licenseId, fuelType, fuelAmount);
         }
         catch (Exception e)
         {
-            MenuManager.PrintError(e.Message);
+            MenuManager.PrintMessageAndGoBackToMenu(e.Message);
             return;
         }
 
-        MenuManager.PrintSuccess("Vehicle fueled successfully.");
+        MenuManager.PrintMessageAndGoBackToMenu("Vehicle fueled successfully.");
     }
-
-
+    
     public void InflateTires()
     {
-        Console.WriteLine("Please enter your vehicle registration number: ");
-        string licenseId = Console.ReadLine();
+        string licenseId = InputHelper.GetLicenseId();
 
         try
         {
@@ -120,53 +93,52 @@ class GarageLogicUIBridge
         }
         catch (Exception e)
         {
-            MenuManager.PrintError(e.Message);
+            MenuManager.PrintMessageAndGoBackToMenu(e.Message);
         }
 
-        MenuManager.PrintSuccess("Tires inflated successfully.");
+        MenuManager.PrintMessageAndGoBackToMenu("Tires inflated successfully.");
     }
 
     public void ChangeVehicleState()
     {
-        Console.WriteLine("Please enter your vehicle registration number: ");
-
-        string licenseId = Console.ReadLine();
-
-        Console.WriteLine("Please enter the new state of the vehicle from the following options: ");
-
-        printValidStatesOfVehicle();
-
-        Console.WriteLine();
-
-        string newStateInput = Console.ReadLine();
+        string licenseId = InputHelper.GetLicenseId();
+        Vehicle.eVehicleState vehicleState = InputHelper.GetEnum<Vehicle.eVehicleState>
+            ("new state of the vehicle");
 
         try
         {
-            m_GarageLogic.ChangeVehicleState(licenseId, newStateInput);
+            m_GarageLogic.ChangeVehicleState(licenseId, vehicleState);
         }
         catch (Exception e)
         {
-            MenuManager.PrintError(e.Message);
+            MenuManager.PrintMessageAndGoBackToMenu(e.Message);
         }
-        MenuManager.PrintSuccess("Vehicle state changed successfully.");
+        MenuManager.PrintMessageAndGoBackToMenu("Vehicle state changed successfully.");
     }
 
-    private void printValidStatesOfVehicle()
+    public void GetLicenseIdOfAllVehiclesInGarage()
     {
-        foreach (Vehicle.eVehicleState state in Enum.GetValues(typeof(Vehicle.eVehicleState)))
+        Vehicle.eVehicleState? filterState = InputHelper.GetValidVehicleStateOrNull();
+        List<string> vehiclesLicense = m_GarageLogic.GetLicenseIdOfAllVehiclesInGarage(filterState);
+
+        if (vehiclesLicense.Count == 0)
         {
-            Console.Write($"{state} ");
+            Console.WriteLine("There are no vehicles in garage for the selected state.");
         }
-
-        Console.WriteLine();
+        else
+        {
+            foreach (string vehicleID in vehiclesLicense)
+            {
+                Console.WriteLine(vehicleID);
+            }
+        }
+        
+        MenuManager.PauseClearAndReturnToMenu();
     }
-
-
+    
     public void ShowVehicleDetails()
     {
-        Console.WriteLine("Please enter your vehicle registration number: ");
-        
-        string licenseId = Console.ReadLine();
+        string licenseId = InputHelper.GetLicenseId();
 
         try
         {
@@ -180,126 +152,91 @@ class GarageLogicUIBridge
         }
         catch (Exception e)
         {
-            MenuManager.PrintError(e.Message);
+            MenuManager.PrintMessageAndGoBackToMenu(e.Message);
         }
 
-        MenuManager.PauseAndClear();
+        MenuManager.PauseClearAndReturnToMenu();
     }
 
-
-    public void addVehicle()
+    public void AddVehicle()
     {
-        Console.Clear();
-        Console.WriteLine("Please enter vehicle registration number: ");
-        string licenseId = Console.ReadLine();
+        string licenseId = InputHelper.GetLicenseId();
 
         try
         {
             m_GarageLogic.WorkOnVehicle(licenseId);
+            MenuManager.PrintMessageAndGoBackToMenu("Vehicle in garage, updated vehicle status successfully.");
         }
         catch
         {
             try
             {
+                Console.WriteLine("\nCreating new vehicle:\n");
                 getDetailsAndCreateVehicle(licenseId);
                 getVehicleDetailsAndUpdate(licenseId);
+                MenuManager.PrintMessageAndGoBackToMenu("Vehicle added to garage successfully.");
             }
             catch (Exception e)
             {
-                MenuManager.PrintError(e.Message);
+                MenuManager.PrintMessageAndGoBackToMenu(e.Message);
             }
         }
-
-        MenuManager.PrintSuccess("Vehicle to the garage added successfully.");
     }
 
     private void getDetailsAndCreateVehicle(string i_LicenseId)
     {
         List<string> creationDetails = new List<string>();
-        string userInput, modelName;
-
-        Console.Clear();
-        Console.WriteLine("Vehicle is not in the garage. Please select vehicle type from the following options:");
-        MenuManager.PrintVehicleOptionsMenu();
-        userInput = Console.ReadLine();
-
-        UserInterface.handleVehicleChoice(userInput, out string vehicleType);
-
-        if (vehicleType.Length == 0)
-        {
-            return;
-        }
-
+        string vehicleType = InputHelper.GetEnum<InputHelper.eVehicleTypesOptions>
+            ("vehicle type").ToString();
         Console.WriteLine("Please enter vehicle model name: ");
-        modelName = Console.ReadLine();
+        string modelName = Console.ReadLine();
+        Console.WriteLine();
         creationDetails.Add(vehicleType);
         creationDetails.Add(i_LicenseId);
         creationDetails.Add(modelName);
         m_GarageLogic.CreateVehicle(creationDetails);
     }
 
-
     private void getVehicleDetailsAndUpdate(string i_LicenseId)
     {
         bool returnToMenu = false;
-
         List<string> updateVehicleDetails = new List<string>();
-        string batteryPercentage, fuelPercentage, tireModel;
 
         if (m_GarageLogic.IsElectric(i_LicenseId))
         {
             Console.WriteLine("please enter the battery percentage (0-100): ");
-            batteryPercentage = Console.ReadLine();
+            string batteryPercentage = InputHelper.GetNonNegativeFloat().ToString();
             updateVehicleDetails.Add(batteryPercentage);
+            Console.WriteLine();
         }
         else
         {
             Console.WriteLine("please enter the fuel percentage (0-100): ");
-            fuelPercentage = Console.ReadLine();
+            string fuelPercentage = InputHelper.GetNonNegativeFloat().ToString();
             updateVehicleDetails.Add(fuelPercentage);
+            Console.WriteLine();
         }
 
-        setTiresState(i_LicenseId, updateVehicleDetails, out bool allTiresAtOnce);
-
+        bool allTiresAtOnce = setTiresState(i_LicenseId, updateVehicleDetails);
         Console.WriteLine("Please enter the owner name: ");
         string ownerName = Console.ReadLine();
         updateVehicleDetails.Add(ownerName);
-
-        Console.WriteLine("Please enter the owner phone number: ");
-        string ownerPhone = Console.ReadLine();
-
-        try
-        {
-            InputValidator.checkValidPhoneNumber(ownerPhone);
-            updateVehicleDetails.Add(ownerPhone);
-        }
-        catch(Exception e)
-        {
-            MenuManager.PrintError(e.Message);
-            returnToMenu = true;
-        }
-
-        if (returnToMenu)
-        {
-            return;
-        }
-
-        setVehicleDetails(i_LicenseId, updateVehicleDetails);
-
+        Console.WriteLine();
+        string ownerPhone = InputHelper.GetPhoneNumber();
+        updateVehicleDetails.Add(ownerPhone);
+        Console.WriteLine();
+        addSpecificVehicleDetails(i_LicenseId, updateVehicleDetails);
         try
         {
             m_GarageLogic.UpdateVehicle(i_LicenseId, updateVehicleDetails, allTiresAtOnce);
         }
         catch (FormatException e)
         {
-            Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
+            MenuManager.PrintMessageAndGoBackToMenu(e.Message);
         }
-
     }
 
-    private void setVehicleDetails(string i_LicenseId, List<string> i_VehicleDetails)
+    private void addSpecificVehicleDetails(string i_LicenseId, List<string> i_VehicleDetails)
     {
         if (m_GarageLogic.IsCar(i_LicenseId))
         {
@@ -317,134 +254,76 @@ class GarageLogicUIBridge
 
     private void addCarDetails(List<string> i_VehicleDetails)
     {
-        Console.WriteLine("Please enter the color from the following: ");
-
-        foreach (Car.eColor color in Enum.GetValues(typeof(Car.eColor)))
-        {
-            Console.Write($"{color} ");
-        }
-
-        Console.WriteLine();
-        string colorInput = Console.ReadLine();
+        string colorInput = InputHelper.GetEnum<Car.eColor>
+            ("car color").ToString();
         i_VehicleDetails.Add(colorInput);
-
-        Console.WriteLine("Please enter the number of doors from the following: ");
-
-        foreach (Car.eNumberOfDoors dorNum in Enum.GetValues(typeof(Car.eNumberOfDoors)))
-        {
-            Console.Write($"{dorNum} ");
-        }
-
         Console.WriteLine();
-        string doorsInput = Console.ReadLine();
+        string doorsInput = InputHelper.GetEnum<Car.eNumberOfDoors>
+            ("number of doors").ToString();
         i_VehicleDetails.Add(doorsInput);
+        Console.WriteLine();
     }
 
     private void addMotorcycleDetails(List<string> i_VehicleDetails)
     {
-        Console.WriteLine("Please enter the motorcycle license type from the following: ");
-        foreach (Motorcycle.eLicenseType licenseType in Enum.GetValues(typeof(Motorcycle.eLicenseType)))
-        {
-            Console.Write($"{licenseType} ");
-        }
+        string licenseType = InputHelper.GetEnum<Motorcycle.eLicenseType>
+            ("license type").ToString();
+        i_VehicleDetails.Add(licenseType);
         Console.WriteLine();
-        string licenseTypeInput = Console.ReadLine();
-        i_VehicleDetails.Add(licenseTypeInput);
-
         Console.WriteLine("Please enter the motorcycle engine size: ");
-        string engineSizeInput = Console.ReadLine();
+        string engineSizeInput = InputHelper.GetNonNegativeFloat().ToString();
         i_VehicleDetails.Add(engineSizeInput);
+        Console.WriteLine();
     }
 
     private void addTruckDetails(List<string> i_VehicleDetails)
     {
-        Console.WriteLine("Is the truck dangerous? (true/false): ");
-        string isDangerousInput = Console.ReadLine();
+        string isDangerousInput = InputHelper.GetYesOrNo("Is the truck's load dangerous?").ToString();
         i_VehicleDetails.Add(isDangerousInput);
-
+        Console.WriteLine();
         Console.WriteLine("Please enter the truck cargo capacity: ");
-        string cargoCapacityInput = Console.ReadLine();
+        string cargoCapacityInput = InputHelper.GetNonNegativeFloat().ToString();
         i_VehicleDetails.Add(cargoCapacityInput);
+        Console.WriteLine();
     }
 
-    private void setTiresState(string i_LicenseId, List<string> i_VehicleDetails, out bool io_allTiresAtOnce)
+    private bool setTiresState(string i_LicenseId, List<string> i_VehicleDetails)
     {
-        io_allTiresAtOnce = false;
-        Console.WriteLine("Do you want to set the tire details for all the tires at once? press y, otherwise any key");
-        string? userInput = Console.ReadLine();
+        bool setTiresAtOnce = InputHelper.GetYesOrNo
+            ("Do you want to set the tire details for all the tires at once? press y, otherwise any key");
 
-        if (userInput?.ToLower() == "y")
+        if (setTiresAtOnce)
         {
-            io_allTiresAtOnce = true;
+            setTireDetails(i_VehicleDetails);
         }
-
-        if (io_allTiresAtOnce)
-        {
-            setAllTiresAtOnce(i_LicenseId, i_VehicleDetails);
-        }
-
         else
         {
             setTiresStateIndividually(i_LicenseId, i_VehicleDetails);
         }
+
+        return setTiresAtOnce;
     }
-
-
-
-    private void setTiresStateIndividually(string i_LicenseId, List<string> i_VehicleDetails)
-    {
-        List<KeyValuePair<string, float>> tireDetails = new List<KeyValuePair<string, float>>();
-        int numberOfTires = m_GarageLogic.GetNumberOfTires(i_LicenseId);
-        for (int i = 0; i < numberOfTires; i++)
-        {
-            Console.WriteLine($"Please enter the tire model for tire {i + 1}: ");
-            string i_ModelName = Console.ReadLine();
-
-            Console.WriteLine($"Please enter the current air pressure for tire {i + 1}:");
-            string currentAirPressureInput = Console.ReadLine();
-
-            try
-            {
-                float currentAirPressure = InputValidator.checkValidPositiveFloat(currentAirPressureInput);
-                tireDetails.Add(new KeyValuePair<string, float>(i_ModelName, currentAirPressure));
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Press any key to return to menu");
-                Console.ReadLine();
-                return;
-            }
-        }
-        foreach (KeyValuePair<string, float> modelAndTire in tireDetails)
-        {
-            i_VehicleDetails.Add(modelAndTire.Key);
-            i_VehicleDetails.Add(modelAndTire.Value.ToString());
-        }
-    }
-
-    private void setAllTiresAtOnce(string i_LicenseId, List<string> i_VehicleDetails)
+    
+    private void setTireDetails(List<string> i_VehicleDetails)
     {
         Console.WriteLine("Please enter the tire model: ");
         string tireModel = Console.ReadLine();
-        Console.WriteLine("Please enter the current air pressure: ");
-
-        string currentAirPressureInput = Console.ReadLine();
-        float currentAirPressure;
-
-        try
-        {
-            currentAirPressure = InputValidator.checkValidPositiveFloat(currentAirPressureInput);
-        }
-        catch (FormatException e)
-        {
-            Console.WriteLine(e.Message);
-            Console.WriteLine("Press any key to return to menu");
-            Console.ReadLine();
-            return;
-        }
-
         i_VehicleDetails.Add(tireModel);
-        i_VehicleDetails.Add(currentAirPressure.ToString());
+        Console.WriteLine();
+        Console.WriteLine("Please enter the current air pressure: ");
+        string currentAirPressure = InputHelper.GetNonNegativeFloat().ToString();
+        i_VehicleDetails.Add(currentAirPressure);
+        Console.WriteLine();
+    }
+
+    private void setTiresStateIndividually(string i_LicenseId, List<string> i_VehicleDetails)
+    {
+        int numberOfTires = m_GarageLogic.GetNumberOfTires(i_LicenseId);
+        
+        for (int i = 0; i < numberOfTires; i++)
+        {
+            Console.WriteLine("Tire #1:");
+            setTireDetails(i_VehicleDetails);
+        }
     }
 }

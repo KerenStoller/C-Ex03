@@ -1,6 +1,4 @@
-﻿
-namespace Ex03.ConsoleUI;
-
+﻿namespace Ex03.ConsoleUI;
 
 public class MenuManager
 {
@@ -14,42 +12,31 @@ public class MenuManager
 8) Show vehicle details
 9) Exit";
 
-    private const string k_VehicleOptionsMenu = @"1) FuelCar
-2) ElectricCar
-3) FuelMotorcycle
-4) ElectricMotorcycle
-5) Truck";
-
 
     public static void PrintMenu()
     {
         Console.Clear();
         Console.WriteLine("Welcome to the Garage Management System!");
-        Console.WriteLine("Please choose an option from the menu below:");
         Console.WriteLine(k_MenuOptions);
     }
-    public static void PrintVehicleOptionsMenu()
-    {
-        Console.WriteLine(k_VehicleOptionsMenu);
-    }
 
-    public static void PrintError(string message)
+    public static void PrintMessageAndGoBackToMenu(string message)
     {
         Console.WriteLine(message);
-        Console.WriteLine("Press any key to return to menu");
+        Console.WriteLine("Press any key to return to menu.");
         Console.ReadLine();
         Console.Clear();
     }
-
-    public static void PrintSuccess(string message)
+    
+    public static void PrintErrorAndTryAgain(string message)
     {
         Console.WriteLine(message);
-        Console.WriteLine("Press any key to return to menu");
+        Console.WriteLine("Press any key to try again");
         Console.ReadLine();
         Console.Clear();
     }
-
-    public static void PauseAndClear()
+    
+    public static void PauseClearAndReturnToMenu()
     {
         Console.WriteLine("Press any key to return to menu");
         Console.ReadKey();
