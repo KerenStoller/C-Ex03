@@ -71,7 +71,7 @@ public class Tires
         }
     }
 
-    internal void AddDetailsForTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
+    internal void AddDetailsForTiresIndividually(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
     {
         if(i_TireModelNamesAndPressures.Count != NumberOfTires)
         {

@@ -41,7 +41,7 @@ public abstract class Vehicle
     
     internal void AddSpecificTires(List<KeyValuePair<string, float>> i_TireModelNamesAndPressures)
     {
-        m_Tires.AddDetailsForTires(i_TireModelNamesAndPressures);
+        m_Tires.AddDetailsForTiresIndividually(i_TireModelNamesAndPressures);
     }
     
     internal bool IsElectric()
